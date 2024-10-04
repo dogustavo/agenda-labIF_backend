@@ -13,11 +13,13 @@
     "db:show": "drizzle-kit studio --port 4000"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
     "express": "^4.21.0",
     "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
     "zod": "^3.23.8"
   },
@@ -29,6 +31,7 @@
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   },
   "author": "Gustavo José Santos de Oliveira",

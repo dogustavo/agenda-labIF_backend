@@ -3,15 +3,21 @@ import {
   Response as ExpressResponse
 } from 'express'
 
-export const getUsers = async (
-  _request: ExpressRequest,
-  response: ExpressResponse
-) => {
-  try {
-    return response.status(200).json({
-      ok: 'ok'
-    })
-  } catch (err) {
-    return response.sendStatus(400)
+import { userService } from '~/services/User.services'
+
+export const userController = {
+  getAllUsers: async (
+    _request: ExpressRequest,
+    response: ExpressResponse
+  ): Promise<ExpressResponse> => {
+    try {
+      const users = await userService.getAllUsers()
+      return response.json(users)
+    } catch (error) {
+      if (error instanceof Error)
+        return response.status(404).json({ error: error.message })
+
+      return response.status(500).json({ error: 'Unexpected error' })
+    }
   }
 }

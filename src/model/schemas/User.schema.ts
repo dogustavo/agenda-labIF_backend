@@ -11,22 +11,30 @@ import {
   timestamp
 } from 'drizzle-orm/mysql-core'
 
-// roles
-export const roleEnum = mysqlEnum('role', [
-  'user',
-  'approver',
-  'admin'
-])
+import { scheduleSchema } from './Schedule.schema'
+import { userRoleSchema } from './UserRoles.schema'
 
 export const userSchema = mysqlTable('users', {
   id: int('id').primaryKey().autoincrement().unique().notNull(),
   name: varchar('name', { length: 50 }),
   email: varchar('email', { length: 255 }).notNull().unique(),
   password: varchar('password', { length: 50 }).notNull(),
-  role: roleEnum.notNull().default('user'),
-  created_at: timestamp('created_at').defaultNow().notNull(),
-  updated_at: timestamp('updated_at').defaultNow().notNull()
+  roleId: int('role_id').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
+
+export const userRelations = relations(
+  userSchema,
+  ({ many, one }) => ({
+    scheduledBySchedules: many(scheduleSchema),
+    approvedBySchedules: many(scheduleSchema),
+    role: one(userRoleSchema, {
+      fields: [userSchema.roleId],
+      references: [userRoleSchema.id]
+    })
+  })
+)
 
 export type SelectUser = InferSelectModel<typeof userSchema>
 export type InsertUser = InferInsertModel<typeof userSchema>

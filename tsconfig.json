@@ -5,6 +5,7 @@
     "target": "ES2022", // Atualizado para um valor suportado
     "strict": true,
     "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
