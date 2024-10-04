@@ -18,7 +18,7 @@ export const userSchema = mysqlTable('users', {
   id: int('id').primaryKey().autoincrement().unique().notNull(),
   name: varchar('name', { length: 50 }),
   email: varchar('email', { length: 255 }).notNull().unique(),
-  password: varchar('password', { length: 50 }).notNull(),
+  password: varchar('password', { length: 255 }).notNull(),
   roleId: int('role_id').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()

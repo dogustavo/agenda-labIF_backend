@@ -8,5 +8,12 @@ export const users: Route[] = [
     handler: userController.getAllUsers,
     description: 'Rota para retornar todos users',
     middlewares: []
+  },
+  {
+    method: 'post',
+    path: '/users',
+    handler: userController.create,
+    description: 'Rota para criação de users',
+    middlewares: []
   }
 ]

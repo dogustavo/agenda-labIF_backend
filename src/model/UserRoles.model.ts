@@ -16,6 +16,14 @@ export const userRolesModel = {
 
     return userRole
   },
+  selectByRole: async ({ role }: UserRole) => {
+    const [userRole] = await db
+      .select()
+      .from(userRoleSchema)
+      .where(eq(userRoleSchema.role, role))
+
+    return userRole
+  },
   getAll: async () => {
     return await db.select().from(userRoleSchema)
   }
