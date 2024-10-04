@@ -8,7 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
     "serve": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "db:migrate": "drizzle-kit generate && drizzle-kit push",
+    "db:show": "drizzle-kit studio --port 4000"
   },
   "dependencies": {
     "cors": "^2.8.5",

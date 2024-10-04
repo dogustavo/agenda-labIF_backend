@@ -2,7 +2,7 @@
 import { drizzle } from 'drizzle-orm/mysql2'
 import * as mysql from 'mysql2/promise'
 
-// import {} from './schemas/User.schema'
+import { userSchema } from './schemas/User.schema'
 
 const connection = await mysql.createConnection({
   user: process.env.DB_USER || 'root',
@@ -14,5 +14,7 @@ const connection = await mysql.createConnection({
 
 export const db = drizzle(connection, {
   mode: 'default',
-  schema: {}
+  schema: {
+    userSchema
+  }
 })
