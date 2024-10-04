@@ -64,6 +64,13 @@
       "when": 1728060264168,
       "tag": "0008_fair_spirit",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1728067822487,
+      "tag": "0009_clammy_gunslinger",
+      "breakpoints": true
     }
   ]
 }

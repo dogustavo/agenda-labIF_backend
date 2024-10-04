@@ -8,5 +8,12 @@ export const auth: Route[] = [
     handler: authController.register,
     description: 'Rota para retornar todos users',
     middlewares: []
+  },
+  {
+    method: 'post',
+    path: '/login',
+    handler: authController.login,
+    description: 'Rota para retornar todos users',
+    middlewares: []
   }
 ]

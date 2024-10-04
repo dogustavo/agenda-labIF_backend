@@ -16,7 +16,7 @@ import { userRoleSchema } from './UserRoles.schema'
 
 export const userSchema = mysqlTable('users', {
   id: int('id').primaryKey().autoincrement().unique().notNull(),
-  name: varchar('name', { length: 50 }),
+  name: varchar('name', { length: 50 }).notNull(),
   email: varchar('email', { length: 255 }).notNull().unique(),
   password: varchar('password', { length: 255 }).notNull(),
   roleId: int('role_id').notNull(),
