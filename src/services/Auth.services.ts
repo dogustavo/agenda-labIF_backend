@@ -13,6 +13,11 @@ export const authService = {
       throw new Error('Nível de usuário não encontrado')
     }
 
+    if (isValidRole.role !== 'user') {
+      throw new Error(
+        'Para criar esse tipo de usuário precisa estar autenticado como admin'
+      )
+    }
     const newUser = await userModel.create({
       ...user,
       password: encryptPwd(user.password)
@@ -28,7 +33,7 @@ export const authService = {
 
     return {
       ...userResponse,
-      jwt
+      token: jwt
     }
   },
   loginUser: async (login: {
@@ -59,7 +64,7 @@ export const authService = {
 
     return {
       ...rest,
-      jwt
+      token: jwt
     }
   }
 }

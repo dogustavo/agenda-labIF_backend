@@ -1,4 +1,6 @@
 import { userController } from '~/controller/User.controller'
+import { USER_ROLES } from '~/enums/Roles.enums'
+import { authMiddleware } from '~/middleware/auth.middleware'
 import type { Route } from '~/types/route.type'
 
 export const users: Route[] = [
@@ -7,13 +9,13 @@ export const users: Route[] = [
     path: '/users',
     handler: userController.getAllUsers,
     description: 'Rota para retornar todos users',
-    middlewares: []
+    middlewares: [authMiddleware([USER_ROLES.USER_ADMIN])]
   },
   {
     method: 'post',
     path: '/users',
     handler: userController.create,
     description: 'Rota para criação de users',
-    middlewares: []
+    middlewares: [authMiddleware([USER_ROLES.USER_ADMIN])]
   }
 ]
