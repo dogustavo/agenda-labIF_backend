@@ -71,6 +71,13 @@
       "when": 1728067822487,
       "tag": "0009_clammy_gunslinger",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1728136995240,
+      "tag": "0010_blue_machine_man",
+      "breakpoints": true
     }
   ]
 }

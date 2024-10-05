@@ -3,10 +3,16 @@ import express, { Request, Response, NextFunction } from 'express'
 import { users } from './user'
 import { userRole } from './userRoles'
 import { auth } from './auth'
+import { equipament } from './equipaments'
 
 import type { Route } from '~/types/route.type'
 
-const routes: Route[] = [...users, ...userRole, ...auth]
+const routes: Route[] = [
+  ...users,
+  ...userRole,
+  ...auth,
+  ...equipament
+]
 
 export const registerRoutes = (app: express.Application) => {
   routes.forEach((route) => {

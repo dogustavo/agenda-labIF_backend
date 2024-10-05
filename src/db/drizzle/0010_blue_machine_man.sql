@@ -1,0 +1,1 @@
+ALTER TABLE `equipaments` ADD CONSTRAINT `equipaments_equipament_name_unique` UNIQUE(`equipament_name`);
