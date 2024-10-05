@@ -5,6 +5,7 @@ import {
 
 import { userRoleService } from '~/services/UserRole.services'
 import type { UserRole } from '~/types/userRole.types'
+import { handleError } from '~/utils/error'
 
 export const userRoleController = {
   createUserRole: async (
@@ -22,11 +23,7 @@ export const userRoleController = {
 
       return response.json(userRole)
     } catch (error) {
-      if (error instanceof Error) {
-        response.status(400).json({ error: error.message })
-      }
-
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   },
   getAllUserRole: async (
@@ -38,7 +35,7 @@ export const userRoleController = {
 
       return response.json(userRoles)
     } catch (error) {
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   }
 }

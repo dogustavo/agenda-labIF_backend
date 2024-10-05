@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '~/utils/jwt'
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: number; role: string } // Interface estendida para incluir o usuário
+  user?: { id: number; role: string }
 }
 
 export function authMiddleware(requiredRole: string[]) {
@@ -20,7 +20,7 @@ export function authMiddleware(requiredRole: string[]) {
         .json({ message: 'Authorization header is missing' })
     }
 
-    const token = authHeader.split(' ')[1] // A estrutura é 'Bearer TOKEN'
+    const token = authHeader.split(' ')[1]
 
     if (!token) {
       return res.status(401).json({ message: 'Token not found' })

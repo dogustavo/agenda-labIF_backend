@@ -3,6 +3,9 @@ import { USER_ROLES } from '~/enums/Roles.enums'
 import { authMiddleware } from '~/middleware/auth.middleware'
 import type { Route } from '~/types/route.type'
 
+import { validatorMiddleware } from '~/middleware/validator.middleware'
+import { RegisterSchema } from '~/validators/Auth.schema'
+
 export const users: Route[] = [
   {
     method: 'get',
@@ -16,6 +19,9 @@ export const users: Route[] = [
     path: '/users',
     handler: userController.create,
     description: 'Rota para criação de users',
-    middlewares: [authMiddleware([USER_ROLES.USER_ADMIN])]
+    middlewares: [
+      authMiddleware([USER_ROLES.USER_ADMIN]),
+      validatorMiddleware(RegisterSchema)
+    ]
   }
 ]

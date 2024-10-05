@@ -4,6 +4,7 @@ import {
 } from 'express'
 import { authService } from '~/services/Auth.services'
 import { IUser } from '~/types/user.type'
+import { handleError } from '~/utils/error'
 
 export const authController = {
   register: async (
@@ -17,10 +18,7 @@ export const authController = {
 
       return response.json(user)
     } catch (error) {
-      if (error instanceof Error)
-        return response.status(404).json({ error: error.message })
-
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   },
   login: async (
@@ -37,10 +35,7 @@ export const authController = {
 
       return response.json(user)
     } catch (error) {
-      if (error instanceof Error)
-        return response.status(404).json({ error: error.message })
-
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   }
 }

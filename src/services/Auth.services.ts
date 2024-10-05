@@ -4,19 +4,25 @@ import { IUser } from '~/types/user.type'
 import bcrypt from 'bcrypt'
 import { encryptPwd } from '~/utils/encryption'
 import { generateToken } from '~/utils/jwt'
+import { throwError } from '~/utils/error'
 
 export const authService = {
   register: async ({ user }: { user: IUser }) => {
     const isValidRole = await userRolesModel.selectById(user.roleId)
 
     if (!isValidRole) {
-      throw new Error('Nível de usuário não encontrado')
+      return throwError({
+        message: 'Nível de usuário não encontrado',
+        statusCode: 404
+      })
     }
 
     if (isValidRole.role !== 'user') {
-      throw new Error(
-        'Para criar esse tipo de usuário precisa estar autenticado como admin'
-      )
+      return throwError({
+        message:
+          'Para criar esse tipo de usuário precisa estar autenticado como admin',
+        statusCode: 404
+      })
     }
     const newUser = await userModel.create({
       ...user,
@@ -43,7 +49,10 @@ export const authService = {
     const userData = await userModel.findByEmail(login.username)
 
     if (!userData) {
-      throw new Error('User not found')
+      return throwError({
+        message: `Usuário não encontrado`,
+        statusCode: 404
+      })
     }
 
     const isPasswordValid = await bcrypt.compareSync(
@@ -52,7 +61,10 @@ export const authService = {
     )
 
     if (!isPasswordValid) {
-      throw new Error('Invalid password')
+      return throwError({
+        message: `As credenciais fornecidas estão incorretas. Verifique seu nome de usuário e senha e tente novamente.`,
+        statusCode: 404
+      })
     }
 
     const { password, ...rest } = userData

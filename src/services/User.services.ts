@@ -6,6 +6,7 @@ import type { IUser } from '~/types/user.type'
 
 import { encryptPwd } from '~/utils/encryption'
 import { generateToken } from '~/utils/jwt'
+import { throwError } from '~/utils/error'
 
 export const userService = {
   getAllUsers: async () => {
@@ -17,7 +18,10 @@ export const userService = {
     const isValidRole = await userRolesModel.selectById(user.roleId)
 
     if (!isValidRole) {
-      throw new Error('Nível de usuário não encontrado')
+      return throwError({
+        message: 'Nível de usuário não encontrado',
+        statusCode: 404
+      })
     }
 
     const newUser = await userModel.create({

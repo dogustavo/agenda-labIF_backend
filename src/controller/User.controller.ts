@@ -1,3 +1,4 @@
+import { DrizzleError } from 'drizzle-orm'
 import {
   Request as ExpressRequest,
   Response as ExpressResponse
@@ -6,6 +7,7 @@ import {
 import { userService } from '~/services/User.services'
 
 import type { IUser } from '~/types/user.type'
+import { handleError } from '~/utils/error'
 
 export const userController = {
   getAllUsers: async (
@@ -16,10 +18,7 @@ export const userController = {
       const users = await userService.getAllUsers()
       return response.json(users)
     } catch (error) {
-      if (error instanceof Error)
-        return response.status(404).json({ error: error.message })
-
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   },
   create: async (
@@ -33,10 +32,7 @@ export const userController = {
 
       return response.json(user)
     } catch (error) {
-      if (error instanceof Error)
-        return response.status(404).json({ error: error.message })
-
-      return response.status(500).json({ error: 'Unexpected error' })
+      return handleError(error, response)
     }
   }
 }
