@@ -22,10 +22,16 @@ export const equipamentController = {
   ): Promise<Response> => {
     try {
       const { equipamentId } = _request.params
+      const { selectedDay } = _request.query
 
-      const avaliability = await equipamentService.getAvailabilty(
-        Number(equipamentId)
-      )
+      if (!selectedDay) {
+        return response.status(400).json({ error: 'Dia inválido' })
+      }
+
+      const avaliability = await equipamentService.getAvailabilty({
+        id: Number(equipamentId),
+        selectedDay: String(selectedDay)
+      })
 
       return response.json(avaliability)
     } catch (error) {

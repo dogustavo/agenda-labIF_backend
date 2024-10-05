@@ -22,6 +22,12 @@ export const equipament: Route[] = [
     path: '/equipaments/availability/:equipamentId',
     handler: equipamentController.getAvailabilty,
     description: 'Rota para cadastrar equipamentos',
-    middlewares: []
+    middlewares: [
+      authMiddleware([
+        USER_ROLES.USER_AUTH,
+        USER_ROLES.USER_ADMIN,
+        USER_ROLES.USER_APPROVER
+      ])
+    ]
   }
 ]
