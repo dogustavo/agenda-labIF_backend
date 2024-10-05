@@ -78,6 +78,48 @@
       "when": 1728136995240,
       "tag": "0010_blue_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1728146543497,
+      "tag": "0011_free_matthew_murdock",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1728146641372,
+      "tag": "0012_gray_arachne",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1728146764489,
+      "tag": "0013_panoramic_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1728146809558,
+      "tag": "0014_yummy_kitty_pryde",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1728147207747,
+      "tag": "0015_melted_harpoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1728147970980,
+      "tag": "0016_massive_gamora",
+      "breakpoints": true
     }
   ]
 }

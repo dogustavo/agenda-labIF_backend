@@ -1,0 +1,1 @@
+ALTER TABLE `schedules` MODIFY COLUMN `equipament_id` int;

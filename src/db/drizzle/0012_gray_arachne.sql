@@ -1,0 +1,1 @@
+ALTER TABLE `schedules` MODIFY COLUMN `role` enum('pending','approved','repproved') NOT NULL;

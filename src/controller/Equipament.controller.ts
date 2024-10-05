@@ -15,5 +15,21 @@ export const equipamentController = {
     } catch (error) {
       return handleError(error, response)
     }
+  },
+  getAvailabilty: async (
+    _request: Request,
+    response: Response
+  ): Promise<Response> => {
+    try {
+      const { equipamentId } = _request.params
+
+      const avaliability = await equipamentService.getAvailabilty(
+        Number(equipamentId)
+      )
+
+      return response.json(avaliability)
+    } catch (error) {
+      return handleError(error, response)
+    }
   }
 }

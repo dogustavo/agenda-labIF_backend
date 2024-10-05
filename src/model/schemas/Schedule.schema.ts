@@ -9,14 +9,15 @@ import {
   mysqlTable,
   int,
   varchar,
-  timestamp
+  timestamp,
+  date,
+  time
 } from 'drizzle-orm/mysql-core'
 
 import { userSchema } from './User.schema'
 import { equipamentSchema } from './Equipaments.schema'
 
-// roles
-export const roleEnum = mysqlEnum('role', [
+export const statusEnum = mysqlEnum('status', [
   'pending',
   'approved',
   'repproved'
@@ -24,12 +25,14 @@ export const roleEnum = mysqlEnum('role', [
 
 export const scheduleSchema = mysqlTable('schedules', {
   id: int('id').primaryKey().autoincrement().notNull(),
-  status: varchar('status', { length: 255 }).notNull(),
+  status: statusEnum.notNull().default('pending'),
   scheduledBy: int('scheduled_by').notNull(), // Foreign key to users
   approvedBy: int('approved_by'), // Foreign key to users
   approvedAt: timestamp('approved_at'),
-  scheduleDate: timestamp('schedule_date').notNull(),
-  equipamentId: varchar('equipament_id', { length: 255 }).notNull(), // Foreign key to equipaments
+  scheduleDate: date('schedule_date').notNull(), // Somente a data do agendamento
+  timeInit: time('time_init').notNull(), // Horário de início
+  timeEnd: time('time_end').notNull(), // Horário de fim
+  equipamentId: int('equipament_id'), // Foreign key to equipaments
   createdAt: timestamp('created_at').defaultNow().notNull()
 })
 
