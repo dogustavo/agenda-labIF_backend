@@ -1,4 +1,3 @@
-// index.js
 import { drizzle } from 'drizzle-orm/mysql2'
 import * as mysql from 'mysql2/promise'
 

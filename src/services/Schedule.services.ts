@@ -4,6 +4,7 @@ import { scheduleModel } from '~/model/Schedule.model'
 import { equipamentModel } from '~/model/Equipament.model'
 import { throwError } from '~/utils/error'
 import { compareTimes } from '~/utils/avaliableTime'
+import { USER_ROLES } from '~/enums/Roles.enums'
 
 export const scheduleService = {
   create: async (data: ISchedules) => {
@@ -37,5 +38,12 @@ export const scheduleService = {
     const insertId = result[0].insertId
 
     return await scheduleModel.findById(insertId)
+  },
+  getSchedules: async (id: number, role: string) => {
+    if (USER_ROLES.USER_AUTH === role) {
+      return await scheduleModel.getPendingSchedulesForUser(id)
+    }
+
+    return await scheduleModel.getAllPending()
   }
 }

@@ -26,13 +26,17 @@ export const statusEnum = mysqlEnum('status', [
 export const scheduleSchema = mysqlTable('schedules', {
   id: int('id').primaryKey().autoincrement().notNull(),
   status: statusEnum.notNull().default('pending'),
-  scheduledBy: int('scheduled_by').notNull(), // Foreign key to users
-  approvedBy: int('approved_by'), // Foreign key to users
+  scheduledBy: int('scheduled_by')
+    .notNull()
+    .references(() => userSchema.id), // Foreign key to users
+  approvedBy: int('approved_by').references(() => userSchema.id), // Foreign key to users
   approvedAt: timestamp('approved_at'),
   scheduleDate: date('schedule_date').notNull(), // Somente a data do agendamento
   timeInit: time('time_init').notNull(), // Horário de início
   timeEnd: time('time_end').notNull(), // Horário de fim
-  equipamentId: int('equipament_id'), // Foreign key to equipaments
+  equipamentId: int('equipament_id').references(
+    () => equipamentSchema.id
+  ), // Foreign key to equipaments
   createdAt: timestamp('created_at').defaultNow().notNull()
 })
 
