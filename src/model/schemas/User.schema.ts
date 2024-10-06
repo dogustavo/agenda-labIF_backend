@@ -27,8 +27,12 @@ export const userSchema = mysqlTable('users', {
 export const userRelations = relations(
   userSchema,
   ({ many, one }) => ({
-    scheduledBySchedules: many(scheduleSchema),
-    approvedBySchedules: many(scheduleSchema),
+    scheduledBySchedules: many(scheduleSchema, {
+      relationName: 'scheduledByUser'
+    }),
+    approvedBySchedules: many(scheduleSchema, {
+      relationName: 'approvedByUser'
+    }),
     role: one(userRoleSchema, {
       fields: [userSchema.roleId],
       references: [userRoleSchema.id]

@@ -41,11 +41,13 @@ export const scheduleRelations = relations(
   ({ one }) => ({
     scheduledByUser: one(userSchema, {
       fields: [scheduleSchema.scheduledBy],
-      references: [userSchema.id]
+      references: [userSchema.id],
+      relationName: 'scheduledByUser'
     }),
     approvedByUser: one(userSchema, {
       fields: [scheduleSchema.approvedBy],
-      references: [userSchema.id]
+      references: [userSchema.id],
+      relationName: 'approvedByUser'
     }),
     equipament: one(equipamentSchema, {
       fields: [scheduleSchema.equipamentId],
