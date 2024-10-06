@@ -17,11 +17,40 @@ export const generateAvaliabilityTimes = (
   return availableTimes
 }
 
-export const compareTimes = (a: string, b: string) => {
+export const compareTimes = (
+  a: string,
+  b: string,
+  allowEqual: boolean = false
+) => {
   const time1 = +a.split(':')[0]
   const time2 = +b.split(':')[0]
 
-  if (time1 < time2) return false
+  if (allowEqual) {
+    return time1 <= time2
+  }
+
+  return time1 < time2
+}
+
+export const compareInitTime = (a: string, b: string) => {
+  const time1 = +a.split(':')[0]
+  const time2 = +b.split(':')[0]
+
+  return time1 >= time2
+}
+
+export const compareEndTime = (
+  lastAvailableTime: string,
+  selectedEndTime: string,
+  selectedInitTime: string
+) => {
+  const lastAvailableHour = +lastAvailableTime.split(':')[0]
+  const selectedEndHour = +selectedEndTime.split(':')[0]
+  const selectedInitHour = +selectedInitTime.split(':')[0]
+
+  if (selectedEndHour <= selectedInitHour) return false
+
+  if (selectedEndHour > lastAvailableHour + 1) return false
 
   return true
 }

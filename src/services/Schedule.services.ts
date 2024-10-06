@@ -3,7 +3,10 @@ import type { ISchedules } from '~/types/schedule.type'
 import { scheduleModel } from '~/model/Schedule.model'
 import { equipamentModel } from '~/model/Equipament.model'
 import { throwError } from '~/utils/error'
-import { compareTimes } from '~/utils/avaliableTime'
+import {
+  compareEndTime,
+  compareInitTime
+} from '~/utils/avaliableTime'
 import { USER_ROLES } from '~/enums/Roles.enums'
 
 export const scheduleService = {
@@ -11,13 +14,15 @@ export const scheduleService = {
     const equipament = await equipamentModel.findById(
       data.equipamentId
     )
-    const isValidInitTime = compareTimes(
+
+    const isValidInitTime = compareInitTime(
       data.timeInit,
       equipament.availableFrom
     )
-    const isValidEndTime = compareTimes(
+    const isValidEndTime = compareEndTime(
       equipament.availableTo,
-      data.timeEnd
+      data.timeEnd,
+      data.timeInit
     )
 
     if (!isValidInitTime) {

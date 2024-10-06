@@ -5,20 +5,28 @@ import {
 
 import { handleError } from '~/utils/error'
 
-import type { ISchedules } from '~/types/schedule.type'
+import type { ISchedulesRequest } from '~/types/schedule.type'
 
 import { scheduleService } from '~/services/Schedule.services'
 import { getUserInfoFromToken } from '~/utils/jwt'
 
 export const scheduleController = {
   create: async (
-    _request: ExpressRequest<{}, {}, ISchedules>,
+    _request: ExpressRequest<{}, {}, ISchedulesRequest>,
     response: ExpressResponse
   ): Promise<ExpressResponse> => {
     try {
       const schedule = _request.body
+      const userInfo = getUserInfoFromToken(
+        _request.headers.authorization
+      )
 
-      const res = await scheduleService.create(schedule)
+      const data = {
+        ...schedule,
+        scheduledBy: userInfo.id
+      }
+
+      const res = await scheduleService.create(data)
 
       return response.json(res)
     } catch (error) {
@@ -30,8 +38,9 @@ export const scheduleController = {
     response: ExpressResponse
   ): Promise<ExpressResponse> => {
     try {
-      const token = _request.headers.authorization?.split(' ')[1]
-      const userInfo = getUserInfoFromToken(token)
+      const userInfo = getUserInfoFromToken(
+        _request.headers.authorization
+      )
 
       const res = await scheduleService.getSchedules(
         userInfo.id,
@@ -44,13 +53,11 @@ export const scheduleController = {
     }
   },
   evaluate: async (
-    request: ExpressRequest<{}, {}, ISchedules>,
+    request: ExpressRequest<{}, {}, { action: string }>,
     response: ExpressResponse
   ) => {
     try {
-      return response.json({
-        message: 'rota funcionando'
-      })
+      return response.status(201).end()
     } catch (error) {
       return handleError(error, response)
     }

@@ -5,3 +5,10 @@ export interface ISchedules {
   timeEnd: string
   equipamentId: number
 }
+
+export interface ISchedulesRequest {
+  scheduleDate: Date
+  timeInit: string
+  timeEnd: string
+  equipamentId: number
+}

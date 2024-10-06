@@ -30,7 +30,7 @@ export function getUserInfoFromToken(token?: string) {
     })
   }
 
-  const decode = jwt.verify(token, JWT_SECRET)
+  const decode = jwt.verify(token?.split(' ')[1], JWT_SECRET)
 
   if (typeof decode === 'string') {
     return throwError({
