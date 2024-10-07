@@ -15,6 +15,10 @@ import {
   IScheduleFind
 } from '~/types/schedule.type'
 
+import { eq, like, gte, lte } from 'drizzle-orm'
+import { scheduleSchema } from '~/model/schemas/Schedule.schema'
+import { userSchema } from '~/model/schemas/User.schema'
+
 export const scheduleService = {
   create: async (data: ISchedules) => {
     const equipament = await equipamentModel.findById(
@@ -57,20 +61,30 @@ export const scheduleService = {
     const offset = (page - 1) * pageSize
     const totalRecords = await scheduleModel.getScheduleCount()
     const totalPages = Math.ceil(totalRecords[0].count / pageSize)
-    let schedules = []
 
-    if (USER_ROLES.USER_AUTH === user.role) {
-      schedules = await scheduleModel.getAllSchedulesForUser({
-        offset,
-        pageSize,
-        userId: user.id
-      })
-    } else {
-      schedules = await scheduleModel.getAdminAll({
-        offset: offset,
-        pageSize
-      })
+    const filters = []
+
+    if (query?.startDate) {
+      filters.push(gte(scheduleSchema.scheduleDate, query.startDate))
     }
+    if (query?.endDate) {
+      filters.push(lte(scheduleSchema.scheduleDate, query.endDate))
+    }
+    if (query?.status) {
+      filters.push(eq(scheduleSchema.status, query.status))
+    }
+    if (USER_ROLES.USER_AUTH === user.role) {
+      filters.push(eq(scheduleSchema.scheduledBy, user.id))
+    }
+    if (USER_ROLES.USER_AUTH !== user.role && query?.name) {
+      filters.push(like(userSchema.name, `%${query.name}%`))
+    }
+
+    const schedules = await scheduleModel.getAll({
+      offset,
+      pageSize,
+      filters
+    })
 
     return {
       data: schedules,

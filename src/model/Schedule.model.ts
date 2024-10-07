@@ -2,7 +2,7 @@ import { db } from '~/db'
 import { scheduleSchema } from './schemas/Schedule.schema'
 
 import type { ISchedules } from '~/types/schedule.type'
-import { and, count, eq, or, sql } from 'drizzle-orm'
+import { and, count, eq, gte, like, lte, or, sql } from 'drizzle-orm'
 import { userSchema } from './schemas/User.schema'
 import { equipamentSchema } from './schemas/Equipaments.schema'
 
@@ -16,6 +16,13 @@ const scheduleSearch = {
   timeInit: scheduleSchema.timeInit,
   timeEnd: scheduleSchema.timeEnd
 }
+
+type ScheduleFilters = Array<
+  | ReturnType<typeof eq>
+  | ReturnType<typeof gte>
+  | ReturnType<typeof lte>
+  | ReturnType<typeof like>
+>
 
 export const scheduleModel = {
   create: async (schedule: ISchedules) => {
@@ -52,35 +59,14 @@ export const scheduleModel = {
 
     return schedules
   },
-  getAdminAll: async ({
-    pageSize,
-    offset
-  }: {
-    pageSize: number
-    offset: number
-  }) => {
-    return await db
-      .select(scheduleSearch)
-      .from(scheduleSchema)
-      .innerJoin(
-        userSchema,
-        eq(scheduleSchema.scheduledBy, userSchema.id)
-      )
-      .innerJoin(
-        equipamentSchema,
-        eq(scheduleSchema.equipamentId, equipamentSchema.id)
-      )
-      .limit(pageSize)
-      .offset(offset)
-  },
-  getAllSchedulesForUser: async ({
+  getAll: async ({
     pageSize,
     offset,
-    userId
+    filters
   }: {
     pageSize: number
     offset: number
-    userId: number
+    filters: ScheduleFilters
   }) => {
     return await db
       .select(scheduleSearch)
@@ -93,7 +79,7 @@ export const scheduleModel = {
         equipamentSchema,
         eq(scheduleSchema.equipamentId, equipamentSchema.id)
       )
-      .where(and(eq(scheduleSchema.scheduledBy, userId)))
+      .where(and(...filters))
       .limit(pageSize)
       .offset(offset)
   },
