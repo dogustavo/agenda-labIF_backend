@@ -10,7 +10,10 @@ import {
 } from '~/utils/avaliableTime'
 
 import { USER_ROLES } from '~/enums/Roles.enums'
-import { IScheduleEvaluate } from '~/types/schedule.type'
+import {
+  IScheduleEvaluate,
+  IScheduleFind
+} from '~/types/schedule.type'
 
 export const scheduleService = {
   create: async (data: ISchedules) => {
@@ -47,12 +50,37 @@ export const scheduleService = {
 
     return await scheduleModel.findById(insertId)
   },
-  getSchedules: async (id: number, role: string) => {
-    if (USER_ROLES.USER_AUTH === role) {
-      return await scheduleModel.getPendingSchedulesForUser(id)
+  getSchedules: async ({ user, query }: IScheduleFind) => {
+    const page = parseInt(query?.page as string) || 1 // Página atual (padrão: 1)
+    const pageSize = 12 // Tamanho da página (padrão: 10)
+
+    const offset = (page - 1) * pageSize
+    const totalRecords = await scheduleModel.getScheduleCount()
+    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
+    let schedules = []
+
+    if (USER_ROLES.USER_AUTH === user.role) {
+      schedules = await scheduleModel.getAllSchedulesForUser({
+        offset,
+        pageSize,
+        userId: user.id
+      })
+    } else {
+      schedules = await scheduleModel.getAdminAll({
+        offset: offset,
+        pageSize
+      })
     }
 
-    return await scheduleModel.getAllPending()
+    return {
+      data: schedules,
+      meta: {
+        totalRecords: totalRecords[0].count,
+        totalPages,
+        currentPage: page,
+        pageSize
+      }
+    }
   },
   evaluate: async (evaluate: IScheduleEvaluate) => {
     const schedule = await scheduleModel.findById(evaluate.scheduleId)

@@ -36,11 +36,22 @@ export const scheduleController = {
   ): Promise<ExpressResponse> => {
     try {
       const userInfo = _request.user
+      const { name, status, startDate, endDate, page } =
+        _request.query
 
-      const res = await scheduleService.getSchedules(
-        userInfo?.id as number,
-        userInfo?.role as string
-      )
+      const res = await scheduleService.getSchedules({
+        user: {
+          id: userInfo?.id as number,
+          role: userInfo?.role as string
+        },
+        query: {
+          endDate,
+          name,
+          page,
+          startDate,
+          status
+        }
+      })
 
       return response.json(res)
     } catch (error) {

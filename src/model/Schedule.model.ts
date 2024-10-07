@@ -2,7 +2,7 @@ import { db } from '~/db'
 import { scheduleSchema } from './schemas/Schedule.schema'
 
 import type { ISchedules } from '~/types/schedule.type'
-import { and, eq, or, sql } from 'drizzle-orm'
+import { and, count, eq, or, sql } from 'drizzle-orm'
 import { userSchema } from './schemas/User.schema'
 import { equipamentSchema } from './schemas/Equipaments.schema'
 
@@ -52,7 +52,13 @@ export const scheduleModel = {
 
     return schedules
   },
-  getAllPending: async () => {
+  getAdminAll: async ({
+    pageSize,
+    offset
+  }: {
+    pageSize: number
+    offset: number
+  }) => {
     return await db
       .select(scheduleSearch)
       .from(scheduleSchema)
@@ -64,9 +70,18 @@ export const scheduleModel = {
         equipamentSchema,
         eq(scheduleSchema.equipamentId, equipamentSchema.id)
       )
-      .where(eq(scheduleSchema.status, 'pending'))
+      .limit(pageSize)
+      .offset(offset)
   },
-  getPendingSchedulesForUser: async (userId: number) => {
+  getAllSchedulesForUser: async ({
+    pageSize,
+    offset,
+    userId
+  }: {
+    pageSize: number
+    offset: number
+    userId: number
+  }) => {
     return await db
       .select(scheduleSearch)
       .from(scheduleSchema)
@@ -78,12 +93,9 @@ export const scheduleModel = {
         equipamentSchema,
         eq(scheduleSchema.equipamentId, equipamentSchema.id)
       )
-      .where(
-        and(
-          eq(scheduleSchema.scheduledBy, userId),
-          eq(scheduleSchema.status, 'pending')
-        )
-      )
+      .where(and(eq(scheduleSchema.scheduledBy, userId)))
+      .limit(pageSize)
+      .offset(offset)
   },
   evaluateSchedule: async ({
     scheduleId,
@@ -100,5 +112,8 @@ export const scheduleModel = {
       .update(scheduleSchema)
       .set(data)
       .where(eq(scheduleSchema.id, scheduleId))
+  },
+  getScheduleCount: async () => {
+    return await db.select({ count: count() }).from(scheduleSchema)
   }
 }

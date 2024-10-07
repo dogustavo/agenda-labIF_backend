@@ -19,3 +19,17 @@ export interface IScheduleEvaluate {
   aproverId: number
   role?: 'user' | 'approver' | 'admin'
 }
+
+export interface IScheduleFind {
+  query?: {
+    name?: any
+    status?: any
+    startDate?: any
+    endDate?: any
+    page?: any
+  }
+  user: {
+    id: number
+    role: string
+  }
+}
