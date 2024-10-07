@@ -8,7 +8,6 @@ import {
   mysqlEnum,
   mysqlTable,
   int,
-  varchar,
   timestamp,
   date,
   time
@@ -29,8 +28,8 @@ export const scheduleSchema = mysqlTable('schedules', {
   scheduledBy: int('scheduled_by')
     .notNull()
     .references(() => userSchema.id), // Foreign key to users
-  approvedBy: int('approved_by').references(() => userSchema.id), // Foreign key to users
-  approvedAt: timestamp('approved_at'),
+  evaluatedBy: int('evaluated_by').references(() => userSchema.id), // Foreign key to users
+  evaluatedAt: timestamp('evaluated_at'),
   scheduleDate: date('schedule_date').notNull(), // Somente a data do agendamento
   timeInit: time('time_init').notNull(), // Horário de início
   timeEnd: time('time_end').notNull(), // Horário de fim
@@ -48,10 +47,10 @@ export const scheduleRelations = relations(
       references: [userSchema.id],
       relationName: 'scheduledByUser'
     }),
-    approvedByUser: one(userSchema, {
-      fields: [scheduleSchema.approvedBy],
+    evaluatedByUser: one(userSchema, {
+      fields: [scheduleSchema.evaluatedBy],
       references: [userSchema.id],
-      relationName: 'approvedByUser'
+      relationName: 'evaluatedByUser'
     }),
     equipament: one(equipamentSchema, {
       fields: [scheduleSchema.equipamentId],

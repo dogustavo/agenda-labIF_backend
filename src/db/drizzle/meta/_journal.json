@@ -127,6 +127,20 @@
       "when": 1728236702004,
       "tag": "0017_stale_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1728306909607,
+      "tag": "0018_normal_boomer",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1728306978390,
+      "tag": "0019_worried_rocket_racer",
+      "breakpoints": true
     }
   ]
 }

@@ -2,8 +2,13 @@
 import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '~/utils/jwt'
 
+interface IToken {
+  id: number
+  role: 'user' | 'approver' | 'admin'
+}
+
 export interface AuthenticatedRequest extends Request {
-  user?: { id: number; role: string }
+  user?: IToken
 }
 
 export function authMiddleware(requiredRole: string[]) {
@@ -27,8 +32,8 @@ export function authMiddleware(requiredRole: string[]) {
     }
 
     try {
-      const decoded = verifyToken(token)
-      req.user = decoded as { id: number; role: string }
+      const decoded = verifyToken(token) as IToken
+      req.user = decoded
 
       if (!requiredRole.includes(req.user.role)) {
         return res
@@ -36,6 +41,7 @@ export function authMiddleware(requiredRole: string[]) {
           .json({ message: 'Forbidden: Insufficient role' })
       }
 
+      req.user = decoded
       next()
     } catch (error) {
       return res

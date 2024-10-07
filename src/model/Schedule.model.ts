@@ -11,7 +11,7 @@ const scheduleSearch = {
   status: scheduleSchema.status, // Status do agendamento
   scheduledBy: userSchema.name, // Nome do usuário que agendou
   equipamentName: equipamentSchema.equipamentName, // Nome do equipamento
-  approvedBy: scheduleSchema.approvedBy,
+  evaluatedBy: scheduleSchema.evaluatedBy,
   scheduleDate: scheduleSchema.scheduleDate,
   timeInit: scheduleSchema.timeInit,
   timeEnd: scheduleSchema.timeEnd
@@ -84,5 +84,21 @@ export const scheduleModel = {
           eq(scheduleSchema.status, 'pending')
         )
       )
+  },
+  evaluateSchedule: async ({
+    scheduleId,
+    data
+  }: {
+    scheduleId: number
+    data: {
+      status: 'approved' | 'repproved'
+      evaluatedBy: number
+      evaluatedAt: Date
+    }
+  }) => {
+    return await db
+      .update(scheduleSchema)
+      .set(data)
+      .where(eq(scheduleSchema.id, scheduleId))
   }
 }

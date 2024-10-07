@@ -8,7 +8,6 @@ import { handleError } from '~/utils/error'
 import type { ISchedulesRequest } from '~/types/schedule.type'
 
 import { scheduleService } from '~/services/Schedule.services'
-import { getUserInfoFromToken } from '~/utils/jwt'
 
 export const scheduleController = {
   create: async (
@@ -17,13 +16,11 @@ export const scheduleController = {
   ): Promise<ExpressResponse> => {
     try {
       const schedule = _request.body
-      const userInfo = getUserInfoFromToken(
-        _request.headers.authorization
-      )
+      const userInfo = _request.user
 
       const data = {
         ...schedule,
-        scheduledBy: userInfo.id
+        scheduledBy: userInfo?.id as number
       }
 
       const res = await scheduleService.create(data)
@@ -38,13 +35,11 @@ export const scheduleController = {
     response: ExpressResponse
   ): Promise<ExpressResponse> => {
     try {
-      const userInfo = getUserInfoFromToken(
-        _request.headers.authorization
-      )
+      const userInfo = _request.user
 
       const res = await scheduleService.getSchedules(
-        userInfo.id,
-        userInfo.role
+        userInfo?.id as number,
+        userInfo?.role as string
       )
 
       return response.json(res)
@@ -53,10 +48,23 @@ export const scheduleController = {
     }
   },
   evaluate: async (
-    request: ExpressRequest<{}, {}, { action: string }>,
+    _request: ExpressRequest,
     response: ExpressResponse
   ) => {
     try {
+      const { scheduleId } = _request.params
+      const { action } = _request.body
+      const user = _request.user
+
+      const schedule = {
+        scheduleId: Number(scheduleId),
+        action,
+        aproverId: user?.id as number,
+        role: user?.role
+      }
+
+      await scheduleService.evaluate(schedule)
+
       return response.status(201).end()
     } catch (error) {
       return handleError(error, response)

@@ -2,12 +2,15 @@ import type { ISchedules } from '~/types/schedule.type'
 
 import { scheduleModel } from '~/model/Schedule.model'
 import { equipamentModel } from '~/model/Equipament.model'
+
 import { throwError } from '~/utils/error'
 import {
   compareEndTime,
   compareInitTime
 } from '~/utils/avaliableTime'
+
 import { USER_ROLES } from '~/enums/Roles.enums'
+import { IScheduleEvaluate } from '~/types/schedule.type'
 
 export const scheduleService = {
   create: async (data: ISchedules) => {
@@ -50,5 +53,33 @@ export const scheduleService = {
     }
 
     return await scheduleModel.getAllPending()
+  },
+  evaluate: async (evaluate: IScheduleEvaluate) => {
+    const schedule = await scheduleModel.findById(evaluate.scheduleId)
+
+    if (!schedule) {
+      return throwError({
+        message: 'Reserva não encontrada',
+        statusCode: 404
+      })
+    }
+
+    if (schedule.status !== 'pending') {
+      return throwError({
+        message: 'Essa reserva já foi avaliada',
+        statusCode: 401
+      })
+    }
+
+    const evaluateResponse = await scheduleModel.evaluateSchedule({
+      scheduleId: evaluate.scheduleId,
+      data: {
+        status: evaluate.action,
+        evaluatedAt: new Date(),
+        evaluatedBy: evaluate.aproverId
+      }
+    })
+
+    console.log('evaluate', evaluateResponse)
   }
 }

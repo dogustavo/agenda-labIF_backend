@@ -12,3 +12,10 @@ export interface ISchedulesRequest {
   timeEnd: string
   equipamentId: number
 }
+
+export interface IScheduleEvaluate {
+  scheduleId: number
+  action: 'approved' | 'repproved'
+  aproverId: number
+  role?: 'user' | 'approver' | 'admin'
+}

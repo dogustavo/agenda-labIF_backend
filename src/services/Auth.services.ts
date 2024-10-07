@@ -24,6 +24,7 @@ export const authService = {
         statusCode: 404
       })
     }
+
     const newUser = await userModel.create({
       ...user,
       password: encryptPwd(user.password)

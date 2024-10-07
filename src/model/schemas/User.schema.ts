@@ -32,8 +32,8 @@ export const userRelations = relations(
     scheduledBySchedules: many(scheduleSchema, {
       relationName: 'scheduledByUser'
     }),
-    approvedBySchedules: many(scheduleSchema, {
-      relationName: 'approvedByUser'
+    evaluatedBySchedules: many(scheduleSchema, {
+      relationName: 'evaluatedByUser'
     }),
     role: one(userRoleSchema, {
       fields: [userSchema.roleId],
