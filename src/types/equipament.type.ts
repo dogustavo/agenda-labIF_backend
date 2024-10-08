@@ -3,3 +3,10 @@ export interface IEquipament {
   availableFrom: string
   availableTo: string
 }
+
+export interface IEquipamentFind {
+  query?: {
+    name?: any
+    page?: any
+  }
+}

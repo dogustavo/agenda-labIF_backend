@@ -1,9 +1,14 @@
-import type { IEquipament } from '~/types/equipament.type'
+import type {
+  IEquipament,
+  IEquipamentFind
+} from '~/types/equipament.type'
 
 import { equipamentModel } from '~/model/Equipament.model'
 import { scheduleModel } from '~/model/Schedule.model'
 import { throwError } from '~/utils/error'
 import { generateAvaliabilityTimes } from '~/utils/avaliableTime'
+import { eq } from 'drizzle-orm'
+import { equipamentSchema } from '~/model/schemas/Equipaments.schema'
 
 export const equipamentService = {
   create: async (data: IEquipament) => {
@@ -11,6 +16,34 @@ export const equipamentService = {
     const insertId = result[0].insertId
 
     return await equipamentModel.findById(insertId)
+  },
+  getAll: async ({ query }: IEquipamentFind) => {
+    const page = 1
+    const pageSize = 12
+
+    const offset = (page - 1) * pageSize
+    const totalRecords = await scheduleModel.getScheduleCount()
+    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
+    const filters = []
+
+    if (query?.name) {
+      filters.push(eq(equipamentSchema.equipamentName, query.name))
+    }
+
+    const result = await equipamentModel.getAll({
+      filters,
+      offset
+    })
+
+    return {
+      data: result,
+      meta: {
+        totalRecords: totalRecords[0].count,
+        totalPages,
+        currentPage: page,
+        pageSize
+      }
+    }
   },
   getAvailabilty: async ({
     id,

@@ -16,6 +16,22 @@ export const equipamentController = {
       return handleError(error, response)
     }
   },
+  getAll: async (_request: Request, response: Response) => {
+    try {
+      const { name, page } = _request.query
+
+      const equipaments = await equipamentService.getAll({
+        query: {
+          name,
+          page
+        }
+      })
+
+      return response.json(equipaments)
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
   getAvailabilty: async (
     _request: Request,
     response: Response
