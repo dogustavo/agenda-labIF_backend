@@ -21,5 +21,24 @@ export const userTypeController = {
     } catch (error) {
       return handleError(error, response)
     }
+  },
+  getAll: async (
+    _request: ExpressRequest,
+    response: ExpressResponse
+  ) => {
+    try {
+      const { name, page } = _request.query
+
+      const userTypes = await userTypeService.getAll({
+        query: {
+          name,
+          page
+        }
+      })
+
+      return response.json(userTypes)
+    } catch (error) {
+      return handleError(error, response)
+    }
   }
 }

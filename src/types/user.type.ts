@@ -10,3 +10,10 @@ export interface IUserType {
   description: string
   is_intern: boolean
 }
+
+export interface IUserTypeFind {
+  query?: {
+    name?: any
+    page?: any
+  }
+}
