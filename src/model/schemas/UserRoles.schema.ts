@@ -19,7 +19,7 @@ export const roleEnum = mysqlEnum('role', [
 ])
 
 export const userRoleSchema = mysqlTable('user_roles', {
-  id: int('id').primaryKey().autoincrement().notNull(),
+  id: int('id').primaryKey().autoincrement().unique().notNull(),
   role: roleEnum.notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull()
 })
@@ -31,5 +31,5 @@ export const userRoleRelations = relations(
   })
 )
 
-export type SelectUser = InferSelectModel<typeof userRoleSchema>
-export type InsertUser = InferInsertModel<typeof userRoleSchema>
+export type SelectUserRole = InferSelectModel<typeof userRoleSchema>
+export type InsertUserRole = InferInsertModel<typeof userRoleSchema>

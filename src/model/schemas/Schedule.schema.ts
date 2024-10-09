@@ -59,5 +59,5 @@ export const scheduleRelations = relations(
   })
 )
 
-export type SelectUser = InferSelectModel<typeof scheduleSchema>
-export type InsertUser = InferInsertModel<typeof scheduleSchema>
+export type SelectSchedules = InferSelectModel<typeof scheduleSchema>
+export type InsertSchedules = InferInsertModel<typeof scheduleSchema>

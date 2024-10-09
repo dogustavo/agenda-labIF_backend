@@ -5,6 +5,7 @@ import { userRole } from './userRoles'
 import { auth } from './auth'
 import { equipament } from './equipaments'
 import { schedules } from './schedules'
+import { userType } from './userType'
 
 import type { Route } from '~/types/route.type'
 
@@ -13,7 +14,8 @@ const routes: Route[] = [
   ...userRole,
   ...auth,
   ...equipament,
-  ...schedules
+  ...schedules,
+  ...userType
 ]
 
 export const registerRoutes = (app: express.Application) => {

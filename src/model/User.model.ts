@@ -3,12 +3,14 @@ import { userSchema } from './schemas/User.schema'
 import type { IUser } from '~/types/user.type'
 import { eq } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
+import { userTypeSchema } from './schemas/UserType.schema'
 
 const userData = {
   id: userSchema.id,
   name: userSchema.name,
   email: userSchema.email,
-  role: userRoleSchema.role
+  role: userRoleSchema.role,
+  userType: userTypeSchema.description
 }
 
 interface UserResponse {
@@ -31,6 +33,10 @@ export const userModel = {
         userRoleSchema,
         eq(userSchema.roleId, userRoleSchema.id)
       )
+      .innerJoin(
+        userTypeSchema,
+        eq(userSchema.userTypeId, userTypeSchema.id)
+      )
       .where(eq(userSchema.id, id))
 
     return user
@@ -44,6 +50,10 @@ export const userModel = {
       .innerJoin(
         userRoleSchema,
         eq(userSchema.roleId, userRoleSchema.id)
+      )
+      .innerJoin(
+        userTypeSchema,
+        eq(userSchema.userTypeId, userTypeSchema.id)
       )
       .where(eq(userSchema.email, username))
 

@@ -17,6 +17,10 @@ import {
   userRoleSchema,
   userRoleRelations
 } from '~/model/schemas/UserRoles.schema'
+import {
+  userTypeSchema,
+  userTypeRelations
+} from '~/model/schemas/UserType.schema'
 
 const connection = await mysql.createConnection({
   user: process.env.MYSQL_USER || 'root',
@@ -36,6 +40,8 @@ export const db = drizzle(connection, {
     equipamentSchema,
     equipamentRelations,
     userRoleSchema,
-    userRoleRelations
+    userRoleRelations,
+    userTypeSchema,
+    userTypeRelations
   }
 })

@@ -1,12 +1,10 @@
-import bcrypt from 'bcrypt'
-
 import { userRolesModel } from '~/model/UserRoles.model'
 import { userModel } from '~/model/User.model'
 import type { IUser } from '~/types/user.type'
 
 import { encryptPwd } from '~/utils/encryption'
-import { generateToken } from '~/utils/jwt'
 import { throwError } from '~/utils/error'
+import { userTypesModel } from '~/model/UserType.model'
 
 export const userService = {
   getAllUsers: async () => {
@@ -16,10 +14,19 @@ export const userService = {
   },
   createUser: async ({ user }: { user: IUser }) => {
     const isValidRole = await userRolesModel.selectById(user.roleId)
+    const isValidUserType = await userTypesModel.selectById(
+      user.userTypeId
+    )
 
     if (!isValidRole) {
       return throwError({
         message: 'Nível de usuário não encontrado',
+        statusCode: 404
+      })
+    }
+    if (!isValidUserType) {
+      return throwError({
+        message: 'Tipo de usuário não encontrado',
         statusCode: 404
       })
     }

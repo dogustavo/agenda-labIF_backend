@@ -32,5 +32,9 @@ export const equipamentRelations = relations(
   })
 )
 
-export type SelectUser = InferSelectModel<typeof equipamentSchema>
-export type InsertUser = InferInsertModel<typeof equipamentSchema>
+export type SelectEquipament = InferSelectModel<
+  typeof equipamentSchema
+>
+export type InsertEquipament = InferInsertModel<
+  typeof equipamentSchema
+>

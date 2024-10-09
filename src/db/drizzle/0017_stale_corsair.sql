@@ -1,4 +1,0 @@
-ALTER TABLE `schedules` ADD CONSTRAINT `schedules_scheduled_by_users_id_fk` FOREIGN KEY (`scheduled_by`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `schedules` ADD CONSTRAINT `schedules_approved_by_users_id_fk` FOREIGN KEY (`approved_by`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `schedules` ADD CONSTRAINT `schedules_equipament_id_equipaments_id_fk` FOREIGN KEY (`equipament_id`) REFERENCES `equipaments`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `users` ADD CONSTRAINT `users_role_id_user_roles_id_fk` FOREIGN KEY (`role_id`) REFERENCES `user_roles`(`id`) ON DELETE no action ON UPDATE no action;

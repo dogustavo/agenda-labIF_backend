@@ -29,5 +29,6 @@ export const RegisterSchema = z.object({
   password: z
     .string({ required_error: 'Campo senha é obrigatório' })
     .min(6, 'Campo senha deve ter ao menos 6 caracteres'),
-  roleId: z.number()
+  roleId: z.number(),
+  userTypeId: z.number()
 })

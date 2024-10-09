@@ -4,7 +4,6 @@ import {
   type InferInsertModel
 } from 'drizzle-orm'
 import {
-  mysqlEnum,
   mysqlTable,
   int,
   varchar,
@@ -13,6 +12,7 @@ import {
 
 import { scheduleSchema } from './Schedule.schema'
 import { userRoleSchema } from './UserRoles.schema'
+import { userTypeSchema } from './UserType.schema'
 
 export const userSchema = mysqlTable('users', {
   id: int('id').primaryKey().autoincrement().unique().notNull(),
@@ -22,6 +22,9 @@ export const userSchema = mysqlTable('users', {
   roleId: int('role_id')
     .notNull()
     .references(() => userRoleSchema.id),
+  userTypeId: int('user_type_id')
+    .notNull()
+    .references(() => userTypeSchema.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
@@ -38,6 +41,11 @@ export const userRelations = relations(
     role: one(userRoleSchema, {
       fields: [userSchema.roleId],
       references: [userRoleSchema.id]
+    }),
+    userTypeUser: one(userTypeSchema, {
+      fields: [userSchema.userTypeId],
+      references: [userTypeSchema.id],
+      relationName: 'userType'
     })
   })
 )
