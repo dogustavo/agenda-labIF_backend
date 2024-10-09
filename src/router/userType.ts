@@ -23,12 +23,6 @@ export const userType: Route[] = [
     path: '/user-type',
     handler: userTypeController.getAll,
     description: 'Rota para cadastrar equipamentos',
-    middlewares: [
-      authMiddleware([
-        USER_ROLES.USER_ADMIN,
-        USER_ROLES.USER_APPROVER,
-        USER_ROLES.USER_AUTH
-      ])
-    ]
+    middlewares: []
   }
 ]
