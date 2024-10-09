@@ -13,9 +13,9 @@ export const userService = {
     return users
   },
   createUser: async ({ user }: { user: IUser }) => {
-    const isValidRole = await userRolesModel.selectById(user.roleId)
-    const isValidUserType = await userTypesModel.selectById(
-      user.userTypeId
+    const isValidRole = await userRolesModel.selectByRole(user.role)
+    const isValidUserType = await userTypesModel.selectByType(
+      user.userType
     )
 
     if (!isValidRole) {
@@ -31,8 +31,12 @@ export const userService = {
       })
     }
 
+    const { role, userType, ...rest } = user
+
     const newUser = await userModel.create({
-      ...user,
+      ...rest,
+      roleId: isValidRole.id,
+      userTypeId: isValidUserType.id,
       password: encryptPwd(user.password)
     })
 

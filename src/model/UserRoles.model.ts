@@ -16,7 +16,7 @@ export const userRolesModel = {
 
     return userRole
   },
-  selectByRole: async ({ role }: UserRole) => {
+  selectByRole: async (role: 'user' | 'approver' | 'admin') => {
     const [userRole] = await db
       .select()
       .from(userRoleSchema)

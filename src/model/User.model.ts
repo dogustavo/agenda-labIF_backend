@@ -1,6 +1,6 @@
 import { db } from '~/db'
 import { userSchema } from './schemas/User.schema'
-import type { IUser } from '~/types/user.type'
+import type { IUser, IUserModel } from '~/types/user.type'
 import { eq } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
@@ -59,7 +59,7 @@ export const userModel = {
 
     return user || null
   },
-  create: async (userData: IUser) => {
+  create: async (userData: IUserModel) => {
     return await db.insert(userSchema).values(userData).execute()
   }
 }

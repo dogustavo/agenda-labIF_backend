@@ -5,10 +5,15 @@ import bcrypt from 'bcrypt'
 import { encryptPwd } from '~/utils/encryption'
 import { generateToken } from '~/utils/jwt'
 import { throwError } from '~/utils/error'
+import { UserRole } from '~/types/userRole.types'
+import { userTypesModel } from '~/model/UserType.model'
 
 export const authService = {
   register: async ({ user }: { user: IUser }) => {
-    const isValidRole = await userRolesModel.selectById(user.roleId)
+    const isValidRole = await userRolesModel.selectByRole(user.role)
+    const isValidUserType = await userTypesModel.selectByType(
+      user.userType
+    )
 
     if (!isValidRole) {
       return throwError({
@@ -25,8 +30,12 @@ export const authService = {
       })
     }
 
+    const { role, userType, ...rest } = user
+
     const newUser = await userModel.create({
-      ...user,
+      ...rest,
+      roleId: isValidRole.id,
+      userTypeId: isValidUserType.id,
       password: encryptPwd(user.password)
     })
 

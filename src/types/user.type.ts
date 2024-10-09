@@ -1,4 +1,13 @@
+import { UserRole } from './userRole.types'
+
 export interface IUser {
+  name: string
+  email: string
+  password: string
+  role: 'user' | 'approver' | 'admin'
+  userType: string
+}
+export interface IUserModel {
   name: string
   email: string
   password: string

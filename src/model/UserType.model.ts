@@ -23,6 +23,14 @@ export const userTypesModel = {
 
     return userRole
   },
+  selectByType: async (description: string) => {
+    const [userRole] = await db
+      .select()
+      .from(userTypeSchema)
+      .where(eq(userTypeSchema.description, description))
+
+    return userRole
+  },
   getAll: async ({
     filters,
     offset
