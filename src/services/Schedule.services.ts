@@ -25,6 +25,27 @@ export const scheduleService = {
       data.equipamentId
     )
 
+    const getDateWithoutTime = (date: Date) => {
+      return new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate()
+      )
+    }
+
+    const scheduleDay = getDateWithoutTime(
+      new Date(data.scheduleDate)
+    )
+    const today = getDateWithoutTime(new Date())
+
+    if (scheduleDay <= today) {
+      return throwError({
+        message:
+          'Não é possível realizar uma reserva anterior ou igual ao dia de hoje',
+        statusCode: 400
+      })
+    }
+
     const isValidInitTime = compareInitTime(
       data.timeInit,
       equipament.availableFrom
@@ -55,8 +76,8 @@ export const scheduleService = {
     return await scheduleModel.findById(insertId)
   },
   getSchedules: async ({ user, query }: IScheduleFind) => {
-    const page = parseInt(query?.page as string) || 1 // Página atual (padrão: 1)
-    const pageSize = 12 // Tamanho da página (padrão: 10)
+    const page = parseInt(query?.page as string) || 1
+    const pageSize = 12
 
     const offset = (page - 1) * pageSize
     const totalRecords = await scheduleModel.getScheduleCount()
