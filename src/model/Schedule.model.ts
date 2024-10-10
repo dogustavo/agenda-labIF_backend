@@ -79,6 +79,7 @@ export const scheduleModel = {
         equipamentSchema,
         eq(scheduleSchema.equipamentId, equipamentSchema.id)
       )
+      .orderBy(scheduleSchema.scheduleDate, scheduleSchema.timeInit)
       .where(and(...filters))
       .limit(pageSize)
       .offset(offset)

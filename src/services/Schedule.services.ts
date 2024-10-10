@@ -62,14 +62,30 @@ export const scheduleService = {
     const totalRecords = await scheduleModel.getScheduleCount()
     const totalPages = Math.ceil(totalRecords[0].count / pageSize)
 
+    const today = new Date()
+    const todayFormatted = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    )
+
+    const twoWeeksLater = new Date(todayFormatted)
+    twoWeeksLater.setDate(todayFormatted.getDate() + 7)
+
     const filters = []
 
-    if (query?.startDate) {
-      filters.push(gte(scheduleSchema.scheduleDate, query.startDate))
-    }
-    if (query?.endDate) {
-      filters.push(lte(scheduleSchema.scheduleDate, query.endDate))
-    }
+    query?.startDate
+      ? filters.push(
+          gte(scheduleSchema.scheduleDate, query.startDate)
+        )
+      : filters.push(gte(scheduleSchema.scheduleDate, todayFormatted))
+
+    query?.endDate
+      ? filters.push(
+          lte(scheduleSchema.scheduleDate, query.startDate)
+        )
+      : filters.push(lte(scheduleSchema.scheduleDate, twoWeeksLater))
+
     if (query?.status) {
       filters.push(eq(scheduleSchema.status, query.status))
     }
