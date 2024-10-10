@@ -80,8 +80,6 @@ export const scheduleService = {
     const pageSize = 12
 
     const offset = (page - 1) * pageSize
-    const totalRecords = await scheduleModel.getScheduleCount()
-    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
 
     const today = new Date()
     const todayFormatted = new Date(
@@ -95,32 +93,36 @@ export const scheduleService = {
 
     const filters = []
 
-    query?.startDate
-      ? filters.push(
-          gte(scheduleSchema.scheduleDate, query.startDate)
-        )
-      : filters.push(gte(scheduleSchema.scheduleDate, todayFormatted))
-
-    query?.endDate
-      ? filters.push(
-          lte(scheduleSchema.scheduleDate, query.startDate)
-        )
-      : filters.push(lte(scheduleSchema.scheduleDate, twoWeeksLater))
+    if (query?.startDate) {
+      filters.push(gte(scheduleSchema.scheduleDate, query.startDate))
+    } else {
+      filters.push(gte(scheduleSchema.scheduleDate, todayFormatted))
+    }
+    if (query?.endDate) {
+      filters.push(lte(scheduleSchema.scheduleDate, query.endDate))
+    } else {
+      filters.push(lte(scheduleSchema.scheduleDate, twoWeeksLater))
+    }
 
     if (query?.status) {
       filters.push(eq(scheduleSchema.status, query.status))
     }
+
     if (USER_ROLES.USER_AUTH === user.role) {
       filters.push(eq(scheduleSchema.scheduledBy, user.id))
     }
-    if (USER_ROLES.USER_AUTH !== user.role && query?.name) {
-      filters.push(like(userSchema.name, `%${query.name}%`))
-    }
+
+    const totalRecords = await scheduleModel.getScheduleCount({
+      filters,
+      userName: query?.name
+    })
+    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
 
     const schedules = await scheduleModel.getAll({
       offset,
       pageSize,
-      filters
+      filters,
+      userName: query?.name
     })
 
     return {
@@ -150,7 +152,7 @@ export const scheduleService = {
       })
     }
 
-    const evaluateResponse = await scheduleModel.evaluateSchedule({
+    await scheduleModel.evaluateSchedule({
       scheduleId: evaluate.scheduleId,
       data: {
         status: evaluate.action,
@@ -158,7 +160,5 @@ export const scheduleService = {
         evaluatedBy: evaluate.aproverId
       }
     })
-
-    console.log('evaluate', evaluateResponse)
   }
 }

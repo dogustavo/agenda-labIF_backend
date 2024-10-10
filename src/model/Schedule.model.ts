@@ -62,13 +62,18 @@ export const scheduleModel = {
   getAll: async ({
     pageSize,
     offset,
-    filters
+    filters,
+    userName
   }: {
     pageSize: number
     offset: number
     filters: ScheduleFilters
+    userName?: string
   }) => {
-    return await db
+    if (userName) {
+      filters.push(like(userSchema.name, `%${userName}%`))
+    }
+    const query = db
       .select(scheduleSearch)
       .from(scheduleSchema)
       .innerJoin(
@@ -79,8 +84,10 @@ export const scheduleModel = {
         equipamentSchema,
         eq(scheduleSchema.equipamentId, equipamentSchema.id)
       )
-      .orderBy(scheduleSchema.scheduleDate, scheduleSchema.timeInit)
       .where(and(...filters))
+
+    return await query
+      .orderBy(scheduleSchema.scheduleDate, scheduleSchema.timeInit)
       .limit(pageSize)
       .offset(offset)
   },
@@ -100,7 +107,23 @@ export const scheduleModel = {
       .set(data)
       .where(eq(scheduleSchema.id, scheduleId))
   },
-  getScheduleCount: async () => {
-    return await db.select({ count: count() }).from(scheduleSchema)
+  getScheduleCount: async ({
+    filters,
+    userName
+  }: {
+    filters: ScheduleFilters
+    userName?: string
+  }) => {
+    if (userName) {
+      filters.push(like(userSchema.name, `%${userName}%`))
+    }
+    return await db
+      .select({ count: count() })
+      .from(scheduleSchema)
+      .innerJoin(
+        userSchema,
+        eq(scheduleSchema.scheduledBy, userSchema.id)
+      )
+      .where(and(...filters))
   }
 }

@@ -1,7 +1,7 @@
 import { db } from '~/db'
 import { userSchema } from './schemas/User.schema'
 import type { IUser, IUserModel } from '~/types/user.type'
-import { eq } from 'drizzle-orm'
+import { eq, like } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
 
