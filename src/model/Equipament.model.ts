@@ -14,7 +14,7 @@ const equipamentSearch = {
   availableTo: equipamentSchema.availableTo
 }
 
-type ScheduleFilters = Array<
+type EquipamentsFilters = Array<
   | ReturnType<typeof eq>
   | ReturnType<typeof gte>
   | ReturnType<typeof lte>
@@ -30,7 +30,7 @@ export const equipamentModel = {
     offset
   }: {
     offset: number
-    filters: ScheduleFilters
+    filters: EquipamentsFilters
   }) => {
     return await db
       .select(equipamentSearch)
@@ -47,7 +47,14 @@ export const equipamentModel = {
 
     return equipament
   },
-  getScheduleCount: async () => {
-    return await db.select({ count: count() }).from(equipamentSchema)
+  getEquipamentsCount: async ({
+    filters
+  }: {
+    filters: EquipamentsFilters
+  }) => {
+    return await db
+      .select({ count: count() })
+      .from(equipamentSchema)
+      .where(and(...filters))
   }
 }

@@ -19,16 +19,19 @@ export const equipamentService = {
   },
   getAll: async ({ query }: IEquipamentFind) => {
     const page = 1
-    const pageSize = 12
+    const pageSize = 25
 
     const offset = (page - 1) * pageSize
-    const totalRecords = await scheduleModel.getScheduleCount()
-    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
     const filters = []
 
     if (query?.name) {
       filters.push(eq(equipamentSchema.equipamentName, query.name))
     }
+
+    const totalRecords = await equipamentModel.getEquipamentsCount({
+      filters
+    })
+    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
 
     const result = await equipamentModel.getAll({
       filters,

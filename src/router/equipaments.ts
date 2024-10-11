@@ -37,6 +37,7 @@ export const equipament: Route[] = [
     description: 'Rota para cadastrar equipamentos',
     middlewares: [
       authMiddleware([
+        USER_ROLES.USER_AUTH,
         USER_ROLES.USER_ADMIN,
         USER_ROLES.USER_APPROVER
       ])
