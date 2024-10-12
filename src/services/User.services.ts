@@ -5,10 +5,18 @@ import type { IUser } from '~/types/user.type'
 import { encryptPwd } from '~/utils/encryption'
 import { throwError } from '~/utils/error'
 import { userTypesModel } from '~/model/UserType.model'
+import { UserRole } from '~/types/userRole.types'
 
 export const userService = {
   getAllUsers: async () => {
     const users = await userModel.getAll()
+
+    return users
+  },
+  getUserByRole: async ({ role }: UserRole) => {
+    const users = await userModel.getByRole({
+      role
+    })
 
     return users
   },

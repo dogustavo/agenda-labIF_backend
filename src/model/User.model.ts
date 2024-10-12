@@ -4,6 +4,7 @@ import type { IUser, IUserModel } from '~/types/user.type'
 import { eq, like } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
+import { UserRole } from '~/types/userRole.types'
 
 const userData = {
   id: userSchema.id,
@@ -19,6 +20,14 @@ interface UserResponse {
   email: string
   password: string
   role: 'user' | 'approver' | 'admin'
+}
+
+const userSearch = {
+  id: userSchema.id,
+  name: userSchema.name,
+  email: userSchema.email,
+  roleId: userRoleSchema.role,
+  userTypeId: userSchema.userTypeId
 }
 
 export const userModel = {
@@ -40,6 +49,18 @@ export const userModel = {
       .where(eq(userSchema.id, id))
 
     return user
+  },
+  getByRole: async ({ role }: UserRole) => {
+    const userRole = await db
+      .select(userSearch)
+      .from(userSchema)
+      .innerJoin(
+        userRoleSchema,
+        eq(userSchema.roleId, userRoleSchema.id)
+      )
+      .where(eq(userRoleSchema.role, role))
+
+    return userRole
   },
   findByEmail: async (
     username: string

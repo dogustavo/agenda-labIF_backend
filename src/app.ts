@@ -4,12 +4,17 @@ import dotenv from 'dotenv'
 import helmet from 'helmet'
 
 import { registerRoutes } from '~/router'
+import { db } from '~/db'
+import createAdminUser from './seeds/createAdmin'
 
 const app = express()
 
 dotenv.config({
   path: '.env'
 })
+;(async () => {
+  await createAdminUser()
+})()
 
 app.use(express.json())
 app.use(

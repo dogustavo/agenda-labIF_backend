@@ -1,5 +1,3 @@
-import { UserRole } from './userRole.types'
-
 export interface IUser {
   name: string
   email: string
