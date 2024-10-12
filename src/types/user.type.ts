@@ -21,6 +21,7 @@ export interface IUserType {
 export interface IUserTypeFind {
   query?: {
     name?: any
+    email?: any
     page?: any
   }
 }

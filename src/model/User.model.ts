@@ -1,7 +1,7 @@
 import { db } from '~/db'
 import { userSchema } from './schemas/User.schema'
-import type { IUser, IUserModel } from '~/types/user.type'
-import { eq, like } from 'drizzle-orm'
+import type { IUserModel } from '~/types/user.type'
+import { and, count, eq, gte, like, lte } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
 import { UserRole } from '~/types/userRole.types'
@@ -30,9 +30,40 @@ const userSearch = {
   userTypeId: userSchema.userTypeId
 }
 
+type ScheduleFilters = Array<
+  | ReturnType<typeof eq>
+  | ReturnType<typeof gte>
+  | ReturnType<typeof lte>
+  | ReturnType<typeof like>
+>
+
 export const userModel = {
-  getAll: async () => {
-    return await db.select().from(userSchema).execute()
+  create: async (userData: IUserModel) => {
+    return await db.insert(userSchema).values(userData).execute()
+  },
+  getAll: async ({
+    pageSize,
+    offset,
+    filters
+  }: {
+    pageSize: number
+    offset: number
+    filters: ScheduleFilters
+  }) => {
+    return await db
+      .select(userData)
+      .from(userSchema)
+      .innerJoin(
+        userRoleSchema,
+        eq(userSchema.roleId, userRoleSchema.id)
+      )
+      .innerJoin(
+        userTypeSchema,
+        eq(userSchema.userTypeId, userTypeSchema.id)
+      )
+      .where(and(...filters))
+      .limit(pageSize)
+      .offset(offset)
   },
   getByID: async (id: number) => {
     const [user] = await db
@@ -80,7 +111,18 @@ export const userModel = {
 
     return user || null
   },
-  create: async (userData: IUserModel) => {
-    return await db.insert(userSchema).values(userData).execute()
+  getUserCount: async ({ filters }: { filters: ScheduleFilters }) => {
+    return await db
+      .select({ count: count() })
+      .from(userSchema)
+      .innerJoin(
+        userRoleSchema,
+        eq(userSchema.roleId, userRoleSchema.id)
+      )
+      .innerJoin(
+        userTypeSchema,
+        eq(userSchema.userTypeId, userTypeSchema.id)
+      )
+      .where(and(...filters))
   }
 }

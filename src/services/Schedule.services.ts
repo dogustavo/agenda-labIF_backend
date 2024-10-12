@@ -76,7 +76,7 @@ export const scheduleService = {
   },
   getSchedules: async ({ user, query }: IScheduleFind) => {
     const page = parseInt(query?.page as string) || 1
-    const pageSize = 12
+    const pageSize = 25
 
     const offset = (page - 1) * pageSize
 

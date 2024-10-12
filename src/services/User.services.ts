@@ -1,17 +1,50 @@
 import { userRolesModel } from '~/model/UserRoles.model'
 import { userModel } from '~/model/User.model'
-import type { IUser } from '~/types/user.type'
+import type { IUser, IUserTypeFind } from '~/types/user.type'
 
 import { encryptPwd } from '~/utils/encryption'
 import { throwError } from '~/utils/error'
 import { userTypesModel } from '~/model/UserType.model'
 import { UserRole } from '~/types/userRole.types'
+import { eq, like } from 'drizzle-orm'
+import { userSchema } from '~/model/schemas/User.schema'
 
 export const userService = {
-  getAllUsers: async () => {
-    const users = await userModel.getAll()
+  getAllUsers: async ({ query }: IUserTypeFind) => {
+    const page = parseInt(query?.page as string) || 1
+    const pageSize = 25
+    const offset = (page - 1) * pageSize
 
-    return users
+    const filters = []
+
+    if (query?.name) {
+      filters.push(like(userSchema.name, `%${query.name}%`))
+    }
+    if (query?.email) {
+      filters.push(eq(userSchema.email, query.email))
+    }
+
+    const users = await userModel.getAll({
+      offset,
+      pageSize,
+      filters
+    })
+
+    const totalRecords = await userModel.getUserCount({
+      filters
+    })
+
+    const totalPages = Math.ceil(totalRecords[0].count / pageSize)
+
+    return {
+      data: users,
+      meta: {
+        totalRecords: totalRecords[0].count,
+        totalPages,
+        currentPage: page,
+        pageSize
+      }
+    }
   },
   getUserByRole: async ({ role }: UserRole) => {
     const users = await userModel.getByRole({

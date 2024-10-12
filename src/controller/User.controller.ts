@@ -15,7 +15,15 @@ export const userController = {
     response: ExpressResponse
   ): Promise<ExpressResponse> => {
     try {
-      const users = await userService.getAllUsers()
+      const { name, email, page } = _request.query
+
+      const users = await userService.getAllUsers({
+        query: {
+          name,
+          email,
+          page
+        }
+      })
       return response.json(users)
     } catch (error) {
       return handleError(error, response)
