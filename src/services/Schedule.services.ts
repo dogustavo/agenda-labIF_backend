@@ -15,9 +15,8 @@ import {
   IScheduleFind
 } from '~/types/schedule.type'
 
-import { eq, like, gte, lte } from 'drizzle-orm'
+import { eq, gte, lte } from 'drizzle-orm'
 import { scheduleSchema } from '~/model/schemas/Schedule.schema'
-import { userSchema } from '~/model/schemas/User.schema'
 
 export const scheduleService = {
   create: async (data: ISchedules) => {

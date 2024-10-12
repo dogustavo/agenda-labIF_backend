@@ -32,6 +32,19 @@ export const equipamentController = {
       return handleError(error, response)
     }
   },
+  getEquipament: async (_request: Request, response: Response) => {
+    try {
+      const { id } = _request.params
+
+      const equipaments = await equipamentService.getEquipament(
+        Number(id)
+      )
+
+      return response.json(equipaments || {})
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
   getAvailabilty: async (
     _request: Request,
     response: Response
@@ -50,6 +63,21 @@ export const equipamentController = {
       })
 
       return response.json(avaliability)
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
+  editEquipament: async (_request: Request, response: Response) => {
+    try {
+      const { equipamentId } = _request.params
+      const equipament = _request.body
+
+      const data = await equipamentService.edit({
+        equipament,
+        equipamentId
+      })
+
+      return response.json(data)
     } catch (error) {
       return handleError(error, response)
     }

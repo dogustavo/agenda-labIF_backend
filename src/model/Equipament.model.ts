@@ -5,7 +5,7 @@ import type {
   IEquipament,
   IEquipamentFind
 } from '~/types/equipament.type'
-import { eq, count, gte, lte, like, and } from 'drizzle-orm'
+import { eq, count, gte, lte, like, and, sql } from 'drizzle-orm'
 
 const equipamentSearch = {
   id: equipamentSchema.id, // ID do agendamento
@@ -25,18 +25,34 @@ export const equipamentModel = {
   create: async (data: IEquipament) => {
     return await db.insert(equipamentSchema).values(data).execute()
   },
+  edit: async ({ data, id }: { id: number; data: IEquipament }) => {
+    return await db
+      .update(equipamentSchema)
+      .set(data)
+      .where(eq(equipamentSchema.id, id))
+  },
   getAll: async ({
-    filters,
-    offset
+    pageSize,
+    offset,
+    equipament
   }: {
     offset: number
-    filters: EquipamentsFilters
+    pageSize: number
+    equipament?: string
   }) => {
+    const filters = []
+
+    if (equipament) {
+      filters.push(
+        like(equipamentSchema.equipamentName, `%${equipament}%`)
+      )
+    }
+
     return await db
       .select(equipamentSearch)
       .from(equipamentSchema)
       .where(and(...filters))
-      .limit(15)
+      .limit(pageSize)
       .offset(offset)
   },
   findById: async (id: number) => {
@@ -48,10 +64,17 @@ export const equipamentModel = {
     return equipament
   },
   getEquipamentsCount: async ({
-    filters
+    equipament
   }: {
-    filters: EquipamentsFilters
+    equipament?: string
   }) => {
+    const filters = []
+
+    if (equipament) {
+      filters.push(
+        like(equipamentSchema.equipamentName, `%${equipament}%`)
+      )
+    }
     return await db
       .select({ count: count() })
       .from(equipamentSchema)

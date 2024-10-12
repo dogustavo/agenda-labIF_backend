@@ -7,8 +7,6 @@ import { equipamentModel } from '~/model/Equipament.model'
 import { scheduleModel } from '~/model/Schedule.model'
 import { throwError } from '~/utils/error'
 import { generateAvaliabilityTimes } from '~/utils/avaliableTime'
-import { eq } from 'drizzle-orm'
-import { equipamentSchema } from '~/model/schemas/Equipaments.schema'
 
 export const equipamentService = {
   create: async (data: IEquipament) => {
@@ -17,25 +15,24 @@ export const equipamentService = {
 
     return await equipamentModel.findById(insertId)
   },
+  getEquipament: async (id: number) => {
+    return await equipamentModel.findById(id)
+  },
   getAll: async ({ query }: IEquipamentFind) => {
-    const page = 1
+    const page = parseInt(query?.page as string) || 1
     const pageSize = 25
 
     const offset = (page - 1) * pageSize
-    const filters = []
-
-    if (query?.name) {
-      filters.push(eq(equipamentSchema.equipamentName, query.name))
-    }
 
     const totalRecords = await equipamentModel.getEquipamentsCount({
-      filters
+      equipament: query?.name
     })
     const totalPages = Math.ceil(totalRecords[0].count / pageSize)
 
     const result = await equipamentModel.getAll({
-      filters,
-      offset
+      pageSize,
+      offset,
+      equipament: query?.name
     })
 
     return {
@@ -92,5 +89,19 @@ export const equipamentService = {
         (val) => !unavailiableTimes.includes(val)
       )
     }
+  },
+  edit: async ({
+    equipament,
+    equipamentId
+  }: {
+    equipamentId: string
+    equipament: IEquipament
+  }) => {
+    await equipamentModel.edit({
+      data: equipament,
+      id: Number(equipamentId)
+    })
+
+    return await equipamentModel.findById(Number(equipamentId))
   }
 }

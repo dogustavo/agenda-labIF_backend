@@ -42,5 +42,28 @@ export const equipament: Route[] = [
         USER_ROLES.USER_APPROVER
       ])
     ]
+  },
+  {
+    method: 'get',
+    path: '/equipaments/:id',
+    handler: equipamentController.getEquipament,
+    description: 'Rota para cadastrar equipamentos',
+    middlewares: [
+      authMiddleware([
+        USER_ROLES.USER_AUTH,
+        USER_ROLES.USER_ADMIN,
+        USER_ROLES.USER_APPROVER
+      ])
+    ]
+  },
+  {
+    method: 'put',
+    path: '/equipaments/:equipamentId',
+    handler: equipamentController.editEquipament,
+    description: 'Rota para editar equipamentos',
+    middlewares: [
+      authMiddleware([USER_ROLES.USER_ADMIN]),
+      validatorMiddleware(EquipamentSchema)
+    ]
   }
 ]
