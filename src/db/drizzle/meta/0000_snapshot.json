@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "fafa8057-804a-4e1f-aa99-8ad49bed7715",
+  "id": "5d368781-6f2f-4a38-92e3-e84f1eb2a51e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "equipaments": {
@@ -239,9 +239,8 @@
           "name": "user_type_id",
           "type": "int",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": 1
+          "notNull": true,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
@@ -349,6 +348,12 @@
         }
       },
       "uniqueConstraints": {
+        "user_roles_id_unique": {
+          "name": "user_roles_id_unique",
+          "columns": [
+            "id"
+          ]
+        },
         "user_roles_role_unique": {
           "name": "user_roles_role_unique",
           "columns": [

@@ -29,7 +29,7 @@ CREATE TABLE `users` (
 	`email` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
 	`role_id` int NOT NULL,
-	`user_type_id` int DEFAULT 1,
+	`user_type_id` int NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
@@ -42,6 +42,7 @@ CREATE TABLE `user_roles` (
 	`role` enum('user','approver','admin') NOT NULL,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `user_roles_id` PRIMARY KEY(`id`),
+	CONSTRAINT `user_roles_id_unique` UNIQUE(`id`),
 	CONSTRAINT `user_roles_role_unique` UNIQUE(`role`)
 );
 --> statement-breakpoint

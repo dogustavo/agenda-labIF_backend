@@ -10,6 +10,8 @@
     "serve": "node dist/index.js",
     "build": "tsc",
     "db:migrate": "drizzle-kit generate && drizzle-kit push",
+    "db:generate": "drizzle-kit generate --custom --name=seed-custom-migrate",
+    "db:create-table": "drizzle-kit migrate",
     "db:show": "drizzle-kit studio --port 4000"
   },
   "dependencies": {
