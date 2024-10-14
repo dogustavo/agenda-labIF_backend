@@ -1,6 +1,10 @@
 import { db } from '~/db'
 import { userSchema } from './schemas/User.schema'
-import type { IUserModel } from '~/types/user.type'
+import type {
+  IEditUser,
+  IEditUserModel,
+  IUserModel
+} from '~/types/user.type'
 import { and, count, eq, gte, like, lte } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
@@ -124,5 +128,17 @@ export const userModel = {
         eq(userSchema.userTypeId, userTypeSchema.id)
       )
       .where(and(...filters))
+  },
+  editUser: async ({
+    data,
+    id
+  }: {
+    id: number
+    data: IEditUserModel
+  }) => {
+    return db
+      .update(userSchema)
+      .set(data)
+      .where(eq(userSchema.id, id))
   }
 }

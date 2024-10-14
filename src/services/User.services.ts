@@ -1,6 +1,10 @@
 import { userRolesModel } from '~/model/UserRoles.model'
 import { userModel } from '~/model/User.model'
-import type { IUser, IUserTypeFind } from '~/types/user.type'
+import type {
+  IEditUser,
+  IUser,
+  IUserTypeFind
+} from '~/types/user.type'
 
 import { encryptPwd } from '~/utils/encryption'
 import { throwError } from '~/utils/error'
@@ -84,5 +88,40 @@ export const userService = {
     const userResponse = await userModel.getByID(newUser[0].insertId)
 
     return userResponse
+  },
+  getUserById: async (id: number) => {
+    return await userModel.getByID(id)
+  },
+  editUser: async ({ user, id }: { user: IEditUser; id: string }) => {
+    const isValidRole = await userRolesModel.selectByRole(user.role)
+    const isValidUserType = await userTypesModel.selectByType(
+      user.userType
+    )
+
+    if (!isValidRole) {
+      return throwError({
+        message: 'Nível de usuário não encontrado',
+        statusCode: 404
+      })
+    }
+    if (!isValidUserType) {
+      return throwError({
+        message: 'Tipo de usuário não encontrado',
+        statusCode: 404
+      })
+    }
+
+    const { role, userType, ...rest } = user
+
+    await userModel.editUser({
+      id: Number(id),
+      data: {
+        ...rest,
+        roleId: isValidRole.id,
+        userTypeId: isValidUserType.id
+      }
+    })
+
+    return await userModel.getByID(Number(id))
   }
 }

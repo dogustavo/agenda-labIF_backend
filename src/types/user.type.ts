@@ -5,12 +5,22 @@ export interface IUser {
   role: 'user' | 'approver' | 'admin'
   userType: string
 }
-export interface IUserModel {
+
+export interface IEditUser {
   name: string
   email: string
-  password: string
+  role: 'user' | 'approver' | 'admin'
+  userType: string
+}
+
+export interface IEditUserModel {
+  name: string
+  email: string
   roleId: number
   userTypeId: number
+}
+export interface IUserModel extends IEditUserModel {
+  password: string
 }
 
 export interface IUserType {

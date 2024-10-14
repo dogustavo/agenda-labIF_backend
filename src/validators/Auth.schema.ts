@@ -32,3 +32,26 @@ export const RegisterSchema = z.object({
   role: z.enum(['user', 'approver', 'admin']),
   userType: z.string().trim()
 })
+
+export const EditSchema = z.object({
+  name: z
+    .string({
+      required_error: 'Nome é obrigatório.'
+    })
+    .trim()
+    .max(70, { message: 'Número de caracteres máximo é 70.' })
+    .refine(
+      (nome) => {
+        const regex = /^[a-zA-ZÀ-ÿ]+(?:\s[a-zA-ZÀ-ÿ]+)+$/
+        return regex.test(nome)
+      },
+      { message: 'Insira um nome completo.' }
+    ),
+  email: z
+    .string({
+      required_error: 'E-mail é obrigatório.'
+    })
+    .email('Insira um endereço de e-mail válido.'),
+  role: z.enum(['user', 'approver', 'admin']),
+  userType: z.string().trim()
+})
