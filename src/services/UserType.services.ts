@@ -10,7 +10,7 @@ export const userTypeService = {
     const insertId = result[0].insertId
     return await userTypesModel.selectById(insertId)
   },
-  getAll: async ({ query }: IUserTypeFind) => {
+  getAll: async ({ query }: { query?: IUserTypeFind }) => {
     const page = 1
     const pageSize = 12
 

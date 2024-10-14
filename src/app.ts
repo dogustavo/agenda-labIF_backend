@@ -3,9 +3,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
 
-import { registerRoutes } from '~/router'
-import { db } from '~/db'
-import createAdminUser from './seeds/createAdmin'
+import { registerRoutes } from '~/router/index.js'
+import createAdminUser from '~/seeds/createAdmin.js'
 
 const app = express()
 
@@ -28,4 +27,4 @@ app.use(
 app.use(helmet())
 registerRoutes(app)
 
-export { app }
+export default app

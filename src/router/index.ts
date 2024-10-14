@@ -1,11 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express'
 
-import { users } from './user'
-import { userRole } from './userRoles'
-import { auth } from './auth'
-import { equipament } from './equipaments'
-import { schedules } from './schedules'
-import { userType } from './userType'
+import { users } from './user.js'
+import { userRole } from './userRoles.js'
+import { auth } from './auth.js'
+import { equipament } from './equipaments.js'
+import { schedules } from './schedules.js'
+import { userType } from './userType.js'
 
 import type { Route } from '~/types/route.type'
 

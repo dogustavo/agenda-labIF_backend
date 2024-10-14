@@ -1,9 +1,9 @@
-import { authController } from '~/controller/Auth.controller'
-import type { Route } from '~/types/route.type'
+import { authController } from '~/controller/Auth.controller.js'
+import type { Route } from '~/types/route.type.js'
 
-import { validatorMiddleware } from '~/middleware/validator.middleware'
+import { validatorMiddleware } from '~/middleware/validator.middleware.js'
 
-import { LoginSchema, RegisterSchema } from '~/validators/Auth.schema'
+import { LoginSchema, RegisterSchema } from '~/validators/Auth.schema.js'
 
 export const auth: Route[] = [
   {
