@@ -55,3 +55,7 @@ export const EditSchema = z.object({
   role: z.enum(['user', 'approver', 'admin']),
   userType: z.string().trim()
 })
+
+export const BlockUserSchema = z.object({
+  action: z.enum(['block', 'unblock'])
+})

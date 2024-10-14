@@ -159,5 +159,29 @@ export const userModel = {
       .update(userSchema)
       .set({ isBlocked })
       .where(eq(userSchema.id, userId))
+  },
+  resetUser: async ({
+    userId,
+    password
+  }: {
+    userId: number
+    password: string
+  }) => {
+    return await db
+      .update(userSchema)
+      .set({ isReseted: true, password })
+      .where(eq(userSchema.id, userId))
+  },
+  updateUserPdw: async ({
+    userId,
+    password
+  }: {
+    userId: number
+    password: string
+  }) => {
+    return await db
+      .update(userSchema)
+      .set({ isReseted: false, password })
+      .where(eq(userSchema.id, userId))
   }
 }

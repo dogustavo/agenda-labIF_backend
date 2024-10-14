@@ -12,6 +12,7 @@ import { userTypesModel } from '~/model/UserType.model'
 import { UserRole } from '~/types/userRole.types'
 import { eq, like, ne } from 'drizzle-orm'
 import { userSchema } from '~/model/schemas/User.schema'
+import { generateToken } from '~/utils/jwt'
 
 export const userService = {
   getAllUsers: async ({
@@ -151,5 +152,53 @@ export const userService = {
       userId,
       isBlocked: action === 'block'
     })
+  },
+  resetUserPwd: async ({ userId }: { userId: number }) => {
+    const user = await userModel.getByID(userId)
+
+    if (!user) {
+      return throwError({
+        message: 'Usuário não encontrada',
+        statusCode: 404
+      })
+    }
+
+    await userModel.resetUser({
+      userId,
+      password: encryptPwd(`${process.env.RESET_USER_DEFAULT_PWD}`)
+    })
+  },
+  updateUserPwd: async ({
+    userId,
+    password
+  }: {
+    userId: number
+    password: string
+  }) => {
+    const user = await userModel.getByID(userId)
+
+    if (!user) {
+      return throwError({
+        message: 'Usuário não encontrada',
+        statusCode: 404
+      })
+    }
+
+    await userModel.updateUserPdw({
+      userId,
+      password: encryptPwd(password)
+    })
+
+    const updatedUser = await userModel.getByID(userId)
+
+    const jwt = generateToken({
+      id: userId,
+      role: updatedUser.role
+    })
+
+    return {
+      ...updatedUser,
+      token: jwt
+    }
   }
 }

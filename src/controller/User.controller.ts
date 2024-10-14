@@ -84,9 +84,43 @@ export const userController = {
       const { id: userId } = _request.params
       const { action } = _request.body
 
-      const user = await userService.blockUser({
+      userService.blockUser({
         action,
         userId: Number(userId)
+      })
+
+      return response.status(201).end()
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
+  resetUserPwd: async (
+    _request: ExpressRequest,
+    response: ExpressResponse
+  ): Promise<ExpressResponse> => {
+    try {
+      const { id: userId } = _request.params
+
+      await userService.resetUserPwd({
+        userId: Number(userId)
+      })
+
+      return response.status(201).end()
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
+  updateUserPwd: async (
+    _request: ExpressRequest,
+    response: ExpressResponse
+  ): Promise<ExpressResponse> => {
+    try {
+      const { id: userId } = _request.params
+      const { password } = _request.body
+
+      const user = await userService.updateUserPwd({
+        userId: Number(userId),
+        password
       })
 
       return response.json(user)
