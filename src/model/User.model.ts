@@ -15,7 +15,9 @@ const userData = {
   name: userSchema.name,
   email: userSchema.email,
   role: userRoleSchema.role,
-  userType: userTypeSchema.description
+  userType: userTypeSchema.description,
+  isBlocked: userSchema.isBlocked,
+  isReseted: userSchema.isReseted
 }
 
 interface UserResponse {
@@ -23,6 +25,7 @@ interface UserResponse {
   name: string
   email: string
   password: string
+  isBlocked?: boolean
   role: 'user' | 'approver' | 'admin'
 }
 
@@ -101,7 +104,11 @@ export const userModel = {
     username: string
   ): Promise<UserResponse | null> => {
     const [user] = await db
-      .select({ ...userData, password: userSchema.password })
+      .select({
+        ...userData,
+        password: userSchema.password,
+        isBlocked: userSchema.isBlocked
+      })
       .from(userSchema)
       .innerJoin(
         userRoleSchema,
@@ -140,5 +147,17 @@ export const userModel = {
       .update(userSchema)
       .set(data)
       .where(eq(userSchema.id, id))
+  },
+  blockUser: async ({
+    userId,
+    isBlocked
+  }: {
+    userId: number
+    isBlocked: boolean
+  }) => {
+    return await db
+      .update(userSchema)
+      .set({ isBlocked })
+      .where(eq(userSchema.id, userId))
   }
 }

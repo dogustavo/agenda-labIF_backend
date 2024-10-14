@@ -10,11 +10,17 @@ import { encryptPwd } from '~/utils/encryption'
 import { throwError } from '~/utils/error'
 import { userTypesModel } from '~/model/UserType.model'
 import { UserRole } from '~/types/userRole.types'
-import { eq, like } from 'drizzle-orm'
+import { eq, like, ne } from 'drizzle-orm'
 import { userSchema } from '~/model/schemas/User.schema'
 
 export const userService = {
-  getAllUsers: async ({ query }: IUserTypeFind) => {
+  getAllUsers: async ({
+    query,
+    userId
+  }: {
+    query?: IUserTypeFind
+    userId: number
+  }) => {
     const page = parseInt(query?.page as string) || 1
     const pageSize = 25
     const offset = (page - 1) * pageSize
@@ -28,6 +34,7 @@ export const userService = {
       filters.push(eq(userSchema.email, query.email))
     }
 
+    filters.push(ne(userSchema.id, userId))
     const users = await userModel.getAll({
       offset,
       pageSize,
@@ -123,5 +130,26 @@ export const userService = {
     })
 
     return await userModel.getByID(Number(id))
+  },
+  blockUser: async ({
+    action,
+    userId
+  }: {
+    userId: number
+    action: 'block' | 'unblock'
+  }) => {
+    const user = await userModel.getByID(userId)
+
+    if (!user) {
+      return throwError({
+        message: 'Usuário não encontrada',
+        statusCode: 404
+      })
+    }
+
+    await userModel.blockUser({
+      userId,
+      isBlocked: action === 'block'
+    })
   }
 }

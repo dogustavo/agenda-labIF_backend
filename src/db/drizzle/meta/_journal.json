@@ -15,6 +15,13 @@
       "when": 1728743670537,
       "tag": "0001_seed-custom-migrate",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1728923204212,
+      "tag": "0002_futuristic_frightful_four",
+      "breakpoints": true
     }
   ]
 }

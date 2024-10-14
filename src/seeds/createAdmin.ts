@@ -10,7 +10,7 @@ const createAdminUser = async () => {
       user: {
         name: 'Admin User',
         role: 'admin',
-        email: 'admin@ifsp.edu.br',
+        email: `${process.env.LABIF_ADMIN_EMAIL}`,
         password: `${process.env.LABIF_ADMIN_PSWD}`,
         userType: 'Outros'
       }

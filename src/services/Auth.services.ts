@@ -65,6 +65,13 @@ export const authService = {
       })
     }
 
+    if (userData.isBlocked) {
+      return throwError({
+        message: `Usuário bloqueado, entre em contato com admin`,
+        statusCode: 401
+      })
+    }
+
     const isPasswordValid = await bcrypt.compareSync(
       login.password,
       userData.password

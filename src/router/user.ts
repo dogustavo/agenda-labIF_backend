@@ -40,5 +40,12 @@ export const users: Route[] = [
       authMiddleware([USER_ROLES.USER_ADMIN]),
       validatorMiddleware(EditSchema)
     ]
+  },
+  {
+    method: 'patch',
+    path: '/users/:id',
+    handler: userController.blockUser,
+    description: 'Rota para bloquear/desbloquear user',
+    middlewares: [authMiddleware([USER_ROLES.USER_ADMIN])]
   }
 ]

@@ -1,4 +1,3 @@
-import { DrizzleError } from 'drizzle-orm'
 import {
   Request as ExpressRequest,
   Response as ExpressResponse
@@ -16,13 +15,15 @@ export const userController = {
   ): Promise<ExpressResponse> => {
     try {
       const { name, email, page } = _request.query
+      const user = _request.user
 
       const users = await userService.getAllUsers({
         query: {
           name,
           email,
           page
-        }
+        },
+        userId: Number(user?.id)
       })
       return response.json(users)
     } catch (error) {
@@ -68,6 +69,24 @@ export const userController = {
       const user = await userService.editUser({
         user: userData,
         id: userId
+      })
+
+      return response.json(user)
+    } catch (error) {
+      return handleError(error, response)
+    }
+  },
+  blockUser: async (
+    _request: ExpressRequest,
+    response: ExpressResponse
+  ): Promise<ExpressResponse> => {
+    try {
+      const { id: userId } = _request.params
+      const { action } = _request.body
+
+      const user = await userService.blockUser({
+        action,
+        userId: Number(userId)
       })
 
       return response.json(user)

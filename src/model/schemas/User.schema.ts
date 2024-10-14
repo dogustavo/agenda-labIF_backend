@@ -7,7 +7,8 @@ import {
   mysqlTable,
   int,
   varchar,
-  timestamp
+  timestamp,
+  boolean
 } from 'drizzle-orm/mysql-core'
 
 import { scheduleSchema } from './Schedule.schema'
@@ -25,6 +26,8 @@ export const userSchema = mysqlTable('users', {
   userTypeId: int('user_type_id')
     .notNull()
     .references(() => userTypeSchema.id),
+  isBlocked: boolean('is_blocked').notNull().default(false),
+  isReseted: boolean('is_reseted').notNull().default(false),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 })
