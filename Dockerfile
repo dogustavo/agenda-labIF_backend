@@ -1,4 +1,4 @@
-FROM node:20 AS base
+FROM node:20-slim AS build
 
 # Instalar bash (opcional, dependendo das suas necessidades)
 RUN apt-get update && apt-get install -y bash

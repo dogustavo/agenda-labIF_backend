@@ -22,8 +22,6 @@ import {
   userTypeRelations
 } from '~/model/schemas/UserType.schema'
 
-console.log('MYSQL_HOST::', process.env.MYSQL_HOST)
-
 const connection = await mysql.createConnection({
   user: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || 'password',
