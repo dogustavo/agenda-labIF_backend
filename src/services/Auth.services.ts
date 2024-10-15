@@ -1,6 +1,6 @@
 import { userModel } from '~/model/User.model'
 import { userRolesModel } from '~/model/UserRoles.model'
-import { IUser } from '~/types/user.type'
+import { IEditUser, IUser } from '~/types/user.type'
 import bcrypt from 'bcrypt'
 import { encryptPwd } from '~/utils/encryption'
 import { generateToken } from '~/utils/jwt'
@@ -95,5 +95,59 @@ export const authService = {
       ...rest,
       token: jwt
     }
+  },
+  getProfile: async (id: number) => {
+    const user = await userModel.getByID(id)
+
+    if (!user) {
+      return throwError({
+        message: `Usuário não encontrado`,
+        statusCode: 404
+      })
+    }
+
+    const jwt = generateToken({
+      id: user.id,
+      role: user.role
+    })
+
+    return { ...user, token: jwt }
+  },
+  editAuthUser: async ({
+    id,
+    data
+  }: {
+    data: {
+      name?: string
+      email?: string
+      password?: string
+    }
+    id: number
+  }) => {
+    const user = await userModel.getByID(id)
+
+    if (!user) {
+      return throwError({
+        message: `Usuário não encontrado`,
+        statusCode: 404
+      })
+    }
+
+    await userModel.editAuthUser({
+      id,
+      data: {
+        ...data,
+        ...(data.password && { password: encryptPwd(data.password) })
+      }
+    })
+
+    const jwt = generateToken({
+      id: user.id,
+      role: user.role
+    })
+
+    const newUser = await userModel.getByID(id)
+
+    return { ...newUser, token: jwt }
   }
 }

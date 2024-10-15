@@ -1,10 +1,6 @@
 import { db } from '~/db'
 import { userSchema } from './schemas/User.schema'
-import type {
-  IEditUser,
-  IEditUserModel,
-  IUserModel
-} from '~/types/user.type'
+import type { IEditUserModel, IUserModel } from '~/types/user.type'
 import { and, count, eq, gte, like, lte } from 'drizzle-orm'
 import { userRoleSchema } from './schemas/UserRoles.schema'
 import { userTypeSchema } from './schemas/UserType.schema'
@@ -142,6 +138,22 @@ export const userModel = {
   }: {
     id: number
     data: IEditUserModel
+  }) => {
+    return db
+      .update(userSchema)
+      .set(data)
+      .where(eq(userSchema.id, id))
+  },
+  editAuthUser: async ({
+    data,
+    id
+  }: {
+    id: number
+    data: {
+      name?: string
+      email?: string
+      password?: string
+    }
   }) => {
     return db
       .update(userSchema)
